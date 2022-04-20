@@ -1,0 +1,55 @@
+@media screen and (max-width: 600px) {
+    .side-menu {
+        display: none;
+    }
+}
+
+.side-menu {
+    width: 17%;
+    margin-left: -17%;
+    margin-top: 7%;
+    position: fixed;
+}
+
+.side-menu .main-option {
+    width: 80%;
+    height: 5vh;
+    border-radius: 10px;
+    border: none;
+    margin: 3% 7%;
+    background-color: rgb(26, 34, 66);
+    color: #FFF;
+}
+
+.listing-options {
+    display: inline-block;
+}
+
+.side-menu .option {
+    background-color: rgb(14, 121, 236);
+    color: #FFF;
+    margin: 1% 2%;
+    padding: 2%;
+    border: none;
+    border-radius: 7px;
+    height: 6vh;
+    max-width: 70%;
+    word-break: break-all;
+}
+
+.chosenOption {
+    background-color: rgb(255, 7, 7);
+    color: #FFF;
+    margin: 1% 2%;
+    padding: 2%;
+    border: none;
+    border-radius: 7px;
+    height: 6vh;
+    max-width: 70%;
+    word-break: break-all;
+}
+
+.listing {
+    max-width: 90%;
+    margin: 1%;
+}

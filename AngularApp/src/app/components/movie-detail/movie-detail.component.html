@@ -1,0 +1,56 @@
+<img id="fullSize" [hidden]="!fullSizeImage" (click)="onHideImage()" [src]="imageUrl">
+<a routerLink="/movies" routerLinkActive="active">Go back</a>
+<h4>{{movie?.title}} ({{movie?.releaseDate}})</h4>
+<div class="grid-container">
+    <div class="grid-item-image">
+        <a (click)="onShowFullSize()">
+            <img [src]="imageUrl">
+        </a>
+    </div>
+    <div class="grid-item-text">
+        <div>
+            <p>Genre: </p>
+        </div>
+        <div>
+            <p>{{movie?.genre}}</p>
+        </div>
+        <div>
+            <p>Release Year: </p>
+        </div>
+        <div>
+            <p>{{movie?.releaseDate}}</p>
+        </div>
+        <div>
+            <p>Director: </p>
+        </div>
+        <div>
+            <p>{{movie?.director}}</p>
+        </div>
+        <div>
+            <p>Runtime: </p>
+        </div>
+        <div>
+            <p>{{movie?.runtimeHours}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="description">
+    <p><strong>The movie is about:</strong></p>
+    <p>{{movie?.description}}</p>
+</div>
+
+<app-list-buttons [movie]="movie" [loggedUserId]="loggedUserId" *ngIf="movie && loggedUserId"></app-list-buttons>
+
+<app-comment [loggedUserId]="loggedUserId" [movie]="movie"></app-comment>
+<!-- <form (ngSubmit)="addComment()" [formGroup]="commentForm">
+    <div class="comment">
+        <input type="text" placeholder="Leave a comment..." formControlName="text">
+        <div class="comment-items" *ngFor="let comment of comments">
+            <h3 class="sender">{{comment.userName}}</h3>
+            <h3 class="content">{{comment.text}}</h3>
+            <h3 class="date">{{comment.date}}</h3>
+            <hr>
+        </div>
+    </div>
+</form> -->

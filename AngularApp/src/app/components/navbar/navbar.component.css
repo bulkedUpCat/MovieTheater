@@ -1,0 +1,47 @@
+.links {
+    background-color: #000;
+    color: rgb(251, 238, 2);
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    display: inline-block;
+    height: 100%;
+    font-weight: bold;
+    color: rgb(251, 238, 2);
+}
+
+span:nth-child(odd)>a:hover {
+    color: rgb(251, 238, 2);
+    background-color: rgb(9, 48, 244);
+}
+
+span:nth-child(even)>a:hover {
+    color: #000;
+    background-color: rgb(251, 238, 2);
+}
+
+.links:first-child {
+    padding-left: 2%;
+}
+
+.links a {
+    padding: 1% 2%;
+}
+
+@media screen and (max-width: 601px) {
+    .links a {
+        padding: 3.7% 2%;
+    }
+}
+
+span:nth-child(odd)>.active {
+    color: rgb(251, 238, 2);
+    background-color: rgb(9, 48, 244);
+}
+
+span:nth-child(even)>.active {
+    color: #000;
+    background-color: rgb(251, 238, 2);
+}

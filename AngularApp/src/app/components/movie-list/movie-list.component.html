@@ -1,0 +1,9 @@
+<app-side-menu (filters)="filterMovies($event)"></app-side-menu>
+<div class="grid-container">
+    <div class="options">
+        <div class="search-bar"><input type="text" placeholder="Search..." [(ngModel)]="searchText" /></div>
+    </div>
+    <div *ngFor="let movie of filteredMovies | filter:searchText">
+        <app-movie [movie]="movie"></app-movie>
+    </div>
+</div>

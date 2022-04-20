@@ -1,0 +1,52 @@
+.comment {
+    display: grid;
+    background-color: rgb(26, 34, 66);
+}
+
+.comment>input {
+    margin: 2%;
+    height: 7vh;
+    padding: 1%;
+    border-radius: 10px;
+}
+
+.comment-items {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    column-gap: 1%;
+    padding: 2%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.sender {
+    color: red;
+    grid-column: 1/3;
+}
+
+.content {
+    text-align: left;
+    color: white;
+    grid-column: 3 / 7;
+}
+
+.date {
+    color: white;
+    text-align: right;
+    grid-column: 7 / 8;
+}
+
+hr {
+    color: white;
+    grid-column: 1 / 8;
+}
+
+h3 {
+    font-size: 2em;
+}
+
+@media screen and (max-width: 601px) {
+    h3 {
+        font-size: 1em;
+    }
+}

@@ -1,0 +1,17 @@
+<div class="links">
+    <span>
+      <a routerLink="movies" routerLinkActive="active">Movies</a>
+    </span>
+    <span *ngIf="!userLoggedIn">
+      <a routerLink="login" routerLinkActive="active">Log in</a>
+    </span>
+    <span *ngIf="!userLoggedIn">
+      <a routerLink="signup" routerLinkActive="active">Sign up</a>
+    </span>
+    <span *ngIf="userLoggedIn">
+      <a routerLink="home" routerLinkActive="active">Home page</a>
+    </span>
+    <span *ngIf="userLoggedIn">
+      <a routerLink="logout" routerLinkActive="active">Log out</a>
+    </span>
+</div>

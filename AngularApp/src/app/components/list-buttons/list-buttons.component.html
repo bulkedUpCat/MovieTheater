@@ -1,0 +1,14 @@
+<div class="button">
+    <button *ngIf="!watchLater" (click)="onWatchLater()" class="watch-later">
+      Watch later
+    </button>
+    <button *ngIf="watchLater" (click)="onRemoveFromWatchLater()" class="watch-later">
+      Remove From Watch later
+    </button>
+    <button *ngIf="!favorite" (click)="onAddToFavorite()" class="favorite">
+      Add To Favorite
+    </button>
+    <button *ngIf="favorite" (click)="onRemoveFromFavorite()" class="favorite">
+      Remove From Favorite
+    </button>
+</div>
