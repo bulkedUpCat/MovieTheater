@@ -27,7 +27,7 @@ export class AuthService {
 
     return this.http.post<UserLogin>(`${environment.apiUrl}/User/login`,user,headers)
       .pipe(tap(user => {
-        if (user && user.token){
+        if (user.token){
           localStorage.setItem("TokenInfo",user.token);
           this.loggedIn.next(true);
         }

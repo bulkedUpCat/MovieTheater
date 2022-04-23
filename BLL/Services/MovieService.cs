@@ -24,7 +24,8 @@ namespace BLL.Services
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            return _unitOfWork.MovieRepository.Get();
+            var movies = _unitOfWork.MovieRepository.Get();
+            return movies;
         }
 
         public bool AddMovie(Movie movie)

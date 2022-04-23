@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   favoriteMovies: Movie[];
   watchLater: boolean;
   favorite: boolean;
-  loggedUserId: number;
+  loggedUserId: string;
   userInfo;
 
   constructor(private movieService: MovieService,

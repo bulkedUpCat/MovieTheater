@@ -6,10 +6,13 @@ using Core.Models;
 using DAL.Abstractions.Interfaces;
 using DataAccess;
 using DataAccess.Repositories;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,12 +22,16 @@ namespace BLL.Services
     public class UserService //: IUserService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        //private readonly IGenericRepository<User> _repo;
-
-        public UserService(UnitOfWork unitOfWork)
+        public UserService(UnitOfWork unitOfWork,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleIdentity)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _roleManager = roleIdentity;
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -34,7 +41,7 @@ namespace BLL.Services
 
         public User GetUser(int id)
         {
-            return _unitOfWork.UserRepository.Get(u => u.Id == id).First();
+            return _unitOfWork.UserRepository.Get(u => Int32.Parse(u.Id) == id).First();
         }
 
         public User GetUser(string email)
@@ -42,58 +49,44 @@ namespace BLL.Services
             return _unitOfWork.UserRepository.Get(u => u.Email == email).First();
         }
 
-        public User LogIn(UserLoginDTO user)
+        public async Task<User> LogIn(UserLoginDTO user)
         {
-            SignInValidator validator = new SignInValidator(this);
+            var foundUser = await _userManager.FindByEmailAsync(user.Email);
 
-            if (!validator.UserPropertiesAreValid(user) ||
-                !validator.UserExists(user))
+            if (foundUser == null)
             {
                 return null;
             }
 
-            var existingUser = _unitOfWork.UserRepository.FirstOrDefault(u => u.Login == user.Login 
-                || u.Email == user.Email);
+            var result = await _userManager.CheckPasswordAsync(foundUser, user.Password);
 
-            if (existingUser == null)
-            {            
-                return null;
-            }
-
-            return existingUser;
+            return result == false ? null : foundUser;
         }
 
         public async Task<User> SignUp(UserRegisterDTO user)
         {
-            SignUpValidator validator = new SignUpValidator(this);
+            var userExists = await _userManager.FindByEmailAsync(user.Email);
 
-            if (!validator.UserPropertiesAreValid(user) ||
-                !validator.EmailIsValid(user.Email) ||
-                !validator.PasswordIsValid(user.Password) ||
-                !validator.PasswordsMatch(user.Password, user.ConfirmPassword))
+            if (userExists != null)
             {
                 return null;
             }
 
-            User newUser = new User()
+            var newUser = new User()
             {
-                Name = user.Name,
-                Email = user.Email,
                 Login = user.Login,
-                Password = user.Password,
-                Age = user.Age
+                UserName = user.Name,
+                Email = user.Email,
+                Age = user.Age,
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
-            try
-            {
-                _unitOfWork.UserRepository.Insert(newUser);
-                _unitOfWork.SaveChanges();
-            }
-            catch (Exception ex)
-            {
+            var result = await _userManager.CreateAsync(newUser, user.Password);
 
+            if (!result.Succeeded)
+            {
+                return null;
             }
-            
 
             return newUser;
         }
@@ -109,7 +102,6 @@ namespace BLL.Services
             {
 
             }
-             
         }
 
         public IEnumerable<User> Where(Expression<Func<User,bool>> expression)

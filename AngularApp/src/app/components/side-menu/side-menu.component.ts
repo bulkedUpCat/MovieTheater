@@ -11,6 +11,7 @@ import { FilterModel } from 'src/app/model/filters';
 export class SideMenuComponent implements OnInit {
   @Output() filters = new EventEmitter<FilterModel>();
   filterModel: FilterModel;
+  showOptions: boolean;
   genres: Array<string> =
   ['Thriller', 'Horror','Adventure','Comedy','Fantasy', 'Action',
   'Drama', 'History', 'Mystery'];
@@ -28,6 +29,10 @@ export class SideMenuComponent implements OnInit {
     this.filterModel = new FilterModel();
     this.filterModel.genres = new Array<string>();
     this.filterModel.years = new Array<number>();
+  }
+
+  showSortingOptions(){
+    this.showOptions = !this.showOptions;
   }
 
   onSortByGenre(genre: string){

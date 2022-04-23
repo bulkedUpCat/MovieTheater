@@ -1,26 +1,29 @@
-<div class="side-menu">
-    <button class="main-option" (click)="showGenres = !showGenres">Genre</button>
-    <div *ngIf="showGenres">
-        <div class="listing">
-            <button *ngFor="let genre of genres" (click)="onSortByGenre(genre)" [ngClass]="{option: !checkIfGenreIsChosen(genre),
+<button (click)="showSortingOptions()">Sort by</button>
+<div *ngIf="showOptions">
+    <div class="side-menu">
+        <button class="main-option" (click)="showGenres = !showGenres">Genre</button>
+        <div *ngIf="showGenres">
+            <div class="listing">
+                <button *ngFor="let genre of genres" (click)="onSortByGenre(genre)" [ngClass]="{option: !checkIfGenreIsChosen(genre),
                                 chosenOption: checkIfGenreIsChosen(genre)}">
               {{genre}}
             </button>
+            </div>
         </div>
-    </div>
-    <button class="main-option" (click)="showYears = !showYears">Year</button>
-    <div *ngIf="showYears">
-        <div class="listing">
-            <button *ngFor="let year of years" (click)="onSortByYear(year)" [ngClass]="{option: !checkIfYearIsChosen(year),
+        <button class="main-option" (click)="showYears = !showYears">Year</button>
+        <div *ngIf="showYears">
+            <div class="listing">
+                <button *ngFor="let year of years" (click)="onSortByYear(year)" [ngClass]="{option: !checkIfYearIsChosen(year),
                     chosenOption: checkIfYearIsChosen(year)}">
               {{year}}
             </button>
+            </div>
         </div>
-    </div>
-    <button class="main-option" (click)="showRuntime = !showRuntime">Runtime</button>
-    <div *ngIf="showRuntime">
-        <button class="option" *ngFor="let runtime of runtimes">
+        <button class="main-option" (click)="showRuntime = !showRuntime">Runtime</button>
+        <div *ngIf="showRuntime">
+            <button class="option" *ngFor="let runtime of runtimes">
         <span>< {{runtime}}</span>
       </button>
+        </div>
     </div>
 </div>

@@ -14,7 +14,7 @@ import { MovieService } from 'src/app/services/movie.service';
 export class MovieDetailComponent implements OnInit {
   comments: any[];
   commentForm: FormGroup;
-  loggedUserId: number;
+  loggedUserId: string;
   userInfo;
   movie: Movie;
   imageUrl: string = '';

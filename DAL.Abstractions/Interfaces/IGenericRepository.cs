@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Abstractions.Interfaces
 {
-    public interface IGenericRepository<T> where T : BaseEntity
+    public interface IGenericRepository<T>
     {
         IEnumerable<T> Get(
             Expression<Func<T, bool>> filter = null,

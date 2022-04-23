@@ -5,9 +5,11 @@ using DataAccess;
 using DataAccess.Contexts;
 using DataAccess.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MovieTheaterApi.Hubs;
+using MovieTheaterApi.JWT;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -31,9 +33,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<JwtHandler>();
 builder.Services.AddSingleton<IConfigurationRoot>(configuration);
 builder.Services.AddTransient<IGenericRepository<Movie>, GenericRepository<Movie>>();
 builder.Services.AddTransient<IGenericRepository<User>, GenericRepository<User>>();
@@ -60,8 +69,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Jwt")["Key"]))
         };
     });
-
-var something = configuration.GetSection("Jwt")["Key"];
 
 var app = builder.Build();
 

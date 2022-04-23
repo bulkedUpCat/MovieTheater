@@ -18,7 +18,7 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Movie> GetFavoriteMoviesOfUser(int id)
+        public IEnumerable<Movie> GetFavoriteMoviesOfUser(string id)
         {
             return _favoriteListService.GetFavoriteMoviesOfUser(id);
         }

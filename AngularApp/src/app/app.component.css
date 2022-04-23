@@ -15,7 +15,7 @@
     }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1050px) {
     .container {
         max-width: 100%;
     }
@@ -23,7 +23,7 @@
 
 @media screen and (max-width: 601px) {
     .container {
-        margin-top: 13.5%;
+        margin-top: 13%;
         max-width: 100%;
         background-color: rgb(26, 34, 66);
         padding: 0;

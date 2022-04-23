@@ -18,9 +18,9 @@ namespace BLL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Movie> GetWatchLaterMoviesOfUser(int userId)
+        public IEnumerable<Movie> GetWatchLaterMoviesOfUser(string id)
         {
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == userId, null, "WatchLaterMovies").FirstOrDefault();
+            var user = _unitOfWork.UserRepository.Get(u => u.Id == id, null, "WatchLaterMovies").FirstOrDefault();
 
             if (user == null)
             {

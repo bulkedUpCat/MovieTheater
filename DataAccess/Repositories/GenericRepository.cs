@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly AppDbContext _context;
         internal DbSet<T> dbSet;

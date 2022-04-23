@@ -18,7 +18,7 @@ namespace BLL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Movie> GetFavoriteMoviesOfUser(int id)
+        public IEnumerable<Movie> GetFavoriteMoviesOfUser(string id)
         {
             var user = _unitOfWork.UserRepository.Get(u => u.Id == id, null, "FavoriteListMovies")
                 .FirstOrDefault();

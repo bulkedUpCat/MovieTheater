@@ -43,9 +43,14 @@ namespace BLL.Services
 
             var user = _unitOfWork.UserRepository.GetByID(commentDTO.UserId);
 
+            if (user == null)
+            {
+                return null;
+            }
+
             var comment = new Comment()
             {
-                UserName = user.Name,
+                UserName = user.UserName,
                 UserId = commentDTO.UserId,
                 MovieId = commentDTO.MovieId,
                 Text = commentDTO.Text

@@ -48,8 +48,8 @@ namespace BLL.Validators
         {
             bool isEmail = EnteredEmail(user.Email);
             if ((!_userService.Any(u => u.Login == user.Login) && !isEmail) ||
-                (!_userService.Any(u => u.Email == user.Email) && isEmail) ||
-                !_userService.Any(u => u.Password == user.Password))
+                (!_userService.Any(u => u.Email == user.Email) && isEmail) /*||
+                !_userService.Any(u => u.Password == user.Password)*/)
             {
                 return false;
             }

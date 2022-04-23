@@ -9,7 +9,7 @@ import { MovieService } from 'src/app/services/movie.service';
 })
 export class ListButtonsComponent implements OnInit,OnChanges {
   @Input() movie: Movie;
-  @Input() loggedUserId: number;
+  @Input() loggedUserId: string;
   watchLater: boolean;
   favorite: boolean;
   constructor(private movieService: MovieService) { }

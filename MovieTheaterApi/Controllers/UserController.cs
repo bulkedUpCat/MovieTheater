@@ -2,8 +2,10 @@
 using Core.DTOs;
 using Core.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MovieTheaterApi.JWT;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -17,12 +19,18 @@ namespace MovieTheaterApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly UserManager<User> _userManager;
+        private readonly JwtHandler _jwtHandler;
         private readonly IConfigurationRoot _configuration;
 
         public UserController(UserService userService,
+            UserManager<User> userManager,
+            JwtHandler jwtHandler,
             IConfigurationRoot configuration)
         {
             _userService = userService;
+            _userManager = userManager;
+            _jwtHandler = jwtHandler;
             _configuration = configuration;
         }
 
@@ -56,23 +64,37 @@ namespace MovieTheaterApi.Controllers
         // POST api/<UserController>
         [HttpPost]
         [Route("login")]
-        public IActionResult LogIn(UserLoginDTO user)
+        public async Task<IActionResult> LogIn(UserLoginDTO user)
         {
             if (user == null)
             {
                 return BadRequest();
             }
 
-            var foundUser = _userService.LogIn(user);
+            var foundUser = await _userService.LogIn(user);
 
             if (foundUser == null)
             {
                 return Unauthorized();
             }
 
-            var tokenString = GenerateJsonWebToken(foundUser);
+            var claims = _jwtHandler.GetClaims(foundUser);
+            var userRoles = await _userManager.GetRolesAsync(foundUser);
 
-            return Ok(new {user = foundUser, token = tokenString });
+            foreach(var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var signingCredentials = _jwtHandler.GetSigningCredentials();
+
+            var token = _jwtHandler.GenerateToken(signingCredentials, claims);
+
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo
+            });
         }
 
         [HttpPost]
@@ -84,31 +106,14 @@ namespace MovieTheaterApi.Controllers
                 return BadRequest();
             }
 
-            await _userService.SignUp(user);
-            return Ok();
-        }
-
-        private string GenerateJsonWebToken(User user)
-        {
-            var securityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt")["Key"]));
-            var credentials = new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+            var newUser = await _userService.SignUp(user);
+            
+            if (newUser == null)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Name),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+                return BadRequest();
+            }
 
-            var token = new JwtSecurityToken(
-                _configuration.GetSection("Jwt")["Issuer"],
-                _configuration.GetSection("Jwt")["Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return Ok(newUser);
         }
 
         // PUT api/<UserController>/5

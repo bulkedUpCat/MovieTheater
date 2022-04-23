@@ -17,9 +17,9 @@ namespace MovieTheater.Components
             Console.Clear();
             Console.Write(new string(symbol, 34));
 
-            for (int i = 0; i < 8 + user.Name.Length; i++)
+            for (int i = 0; i < 8 + user.UserName.Length; i++)
             {
-                Console.Write($"WELCOME {user.Name}"[i]);
+                Console.Write($"WELCOME {user.UserName}"[i]);
                 Thread.Sleep(100);
             }
             Console.WriteLine();

@@ -18,7 +18,6 @@ ServiceCollection services = new ServiceCollection();
 
 services.AddSingleton<IConfigurationRoot>(configuration);
 services.AddSingleton<JsonContext<Movie>>();
-services.AddSingleton<JsonContext<User>>();
 services.AddSingleton<FileWriter<Movie>>();
 services.AddTransient<IGenericRepository<Movie>, GenericRepository<Movie>>();
 services.AddTransient<IGenericRepository<User>, GenericRepository<User>>();

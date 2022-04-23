@@ -18,7 +18,7 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Movie> GetWatchLaterMoviesOfUser(int id)
+        public IEnumerable<Movie> GetWatchLaterMoviesOfUser(string id)
         {
             return _userListService.GetWatchLaterMoviesOfUser(id);
         }

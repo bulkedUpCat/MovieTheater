@@ -12,7 +12,7 @@ import { CommentService } from 'src/app/services/comment.service';
 })
 export class CommentComponent implements OnInit, OnChanges {
   @Input() movie: Movie;
-  @Input() loggedUserId: number;
+  @Input() loggedUserId: string;
   commentForm: FormGroup;
   comments: any[];
   userId: number;

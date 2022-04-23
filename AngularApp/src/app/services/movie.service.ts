@@ -23,11 +23,11 @@ export class MovieService {
 
   // Watch Later List
 
-  getWatchLaterMovies(userId: number) : Observable<Movie[]>{
+  getWatchLaterMovies(userId: string) : Observable<Movie[]>{
     return this.http.get<Movie[]>(`${environment.apiUrl}/WatchLater/` + userId);
   }
 
-  addToWatchLaterList(userId: number, movieId: number){
+  addToWatchLaterList(userId: string, movieId: number){
     const headers = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json'
@@ -40,7 +40,7 @@ export class MovieService {
     return this.http.post(`${environment.apiUrl}/WatchLater`, this.movieUser, headers);
   }
 
-  removeFromWatchLaterList(userId: number, movieId: number){
+  removeFromWatchLaterList(userId: string, movieId: number){
     this.movieUser.userId = userId;
     this.movieUser.movieId = movieId;
 
@@ -49,11 +49,11 @@ export class MovieService {
 
   // Favorite List
 
-  getFavoriteMovies(userId: number) : Observable<Movie[]>{
+  getFavoriteMovies(userId: string) : Observable<Movie[]>{
     return this.http.get<Movie[]>(`${environment.apiUrl}/FavoriteList/` + userId);
   }
 
-  addToFavoriteList(userId: number, movieId: number){
+  addToFavoriteList(userId: string, movieId: number){
     const headers = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json'
@@ -66,7 +66,7 @@ export class MovieService {
     return this.http.post(`${environment.apiUrl}/FavoriteList`, this.movieUser, headers);
   }
 
-  removeFromFavoriteList(userId: number, movieId: number){
+  removeFromFavoriteList(userId: string, movieId: number){
     this.movieUser.userId = userId;
     this.movieUser.movieId = movieId;
 
