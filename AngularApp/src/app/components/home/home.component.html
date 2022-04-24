@@ -1,5 +1,9 @@
-<button (click)="onAddToFavorite()"><h1>Favorite Movies</h1></button>
+<div class="personal-info">
+    <p>Name:&nbsp;&nbsp;&nbsp;&nbsp;{{userInfo.sub}}</p>
+    <p>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{userInfo.email}}</p>
+</div>
 
+<button (click)="onAddToFavorite()"><h1>Favorite Movies</h1></button>
 
 <div class="grid-container" *ngIf="favorite">
     <div class="favorite" *ngFor="let movie of favoriteMovies">
@@ -9,7 +13,6 @@
 
 
 <button (click)="onWatchLater()"><h1>Watch Later</h1></button>
-
 
 <div class="grid-container" *ngIf="watchLater">
     <div class="watch-later" *ngFor="let movie of watchLaterMovies">

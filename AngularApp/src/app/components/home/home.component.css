@@ -11,6 +11,16 @@
     margin: 1% 0;
 }
 
+.personal-info {
+    margin: 2%;
+}
+
+.personal-info p {
+    color: #FFF;
+    margin: 0;
+    padding: 0.5%;
+}
+
 button {
     width: 100%;
     color: transparent;

@@ -43,7 +43,7 @@
         </div>
         <div class="input">
             <input class="input-item" type="text" placeholder="Enter your email" formControlName="email" />
-            <div class="error" *ngIf="submitted && email.errors">
+            <div class="error" *ngIf="submitted && email.dirty && email.errors">
                 <div class="error" *ngIf="email.errors['required']">
                     This field is required
                 </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="input">
             <input class="input-item" type="password" placeholder="Enter your password" formControlName="password" />
-            <div class="error" *ngIf="submitted && password.errors">
+            <div class="error" *ngIf="submitted && password.dirty && password.errors">
                 <div class="error" *ngIf="password.errors['required']">
                     This field is required
                 </div>

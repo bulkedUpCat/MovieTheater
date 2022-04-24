@@ -54,6 +54,8 @@ export class UserLoginComponent implements OnInit {
 
     this.authService.logIn(user).subscribe(x => {
       this.router.navigateByUrl('/movies');
-    },err => console.log(err));
+    },err => alert("Wrong email or password!"));
+
+    this.loginForm.reset();
   }
 }

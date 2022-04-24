@@ -14,7 +14,7 @@ const appRoutes : Routes = [
   {path: 'login', component: UserLoginComponent},
   {path: 'logout', component: UserLogoutComponent, canActivate: [AuthGuard]},
   {path: 'signup', component: UserSignupComponent},
-  {path: 'movies', component: MovieListComponent, canActivate: [AuthGuard]},
+  {path: 'movies', component: MovieListComponent},
   {path:'movie-detail/:id', component: MovieDetailComponent},
   {path:'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path:'**', redirectTo: '/signup'}

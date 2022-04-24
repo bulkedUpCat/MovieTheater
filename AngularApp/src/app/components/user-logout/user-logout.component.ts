@@ -14,5 +14,4 @@ export class UserLogoutComponent implements OnInit {
   ngOnInit(): void {
     this.authService.logOut();
   }
-
 }

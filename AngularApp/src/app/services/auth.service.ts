@@ -10,7 +10,7 @@ import { User, UserLogin, UserSignUp } from '../model/user';
 })
 export class AuthService {
   public loggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('TokenInfo'));
-  //public userId = new BehaviorSubject<number>(parseInt(localStorage.getItem('id')));
+
   constructor(private http: HttpClient,
     private router: Router) { }
 
@@ -25,7 +25,7 @@ export class AuthService {
       })
     };
 
-    return this.http.post<UserLogin>(`${environment.apiUrl}/User/login`,user,headers)
+    return this.http.post<UserLogin>(`${environment.apiUrl}/Auth/login`,user,headers)
       .pipe(tap(user => {
         if (user.token){
           localStorage.setItem("TokenInfo",user.token);
@@ -37,7 +37,6 @@ export class AuthService {
   logOut(){
     this.loggedIn.next(false);
     localStorage.removeItem("TokenInfo");
-    localStorage.removeItem("id");
     this.router.navigate(['/login']);
   }
 
@@ -48,7 +47,7 @@ export class AuthService {
       })
     };
 
-    return this.http.post<UserSignUp>(`${environment.apiUrl}/User/signup`,user,headers);
+    return this.http.post<UserSignUp>(`${environment.apiUrl}/Auth/signup`,user,headers);
   }
 
   getUserInfo(){

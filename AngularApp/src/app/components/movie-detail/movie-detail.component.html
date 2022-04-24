@@ -42,7 +42,7 @@
 
 <app-list-buttons [movie]="movie" [loggedUserId]="loggedUserId" *ngIf="movie && loggedUserId"></app-list-buttons>
 
-<app-comment [loggedUserId]="loggedUserId" [movie]="movie"></app-comment>
+<app-comment *ngIf="loggedUserId" [loggedUserId]="loggedUserId" [movie]="movie"></app-comment>
 <!-- <form (ngSubmit)="addComment()" [formGroup]="commentForm">
     <div class="comment">
         <input type="text" placeholder="Leave a comment..." formControlName="text">

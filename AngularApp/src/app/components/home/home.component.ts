@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
         this.favoriteMovies = m;
       })
     });
+    console.log(this.userInfo);
   }
 
   getUserInfo(){
