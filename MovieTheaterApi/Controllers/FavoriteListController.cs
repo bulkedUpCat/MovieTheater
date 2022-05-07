@@ -18,23 +18,23 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Movie> GetFavoriteMoviesOfUser(string id)
+        public async Task<IEnumerable<Movie>> GetFavoriteMoviesOfUser(string id)
         {
-            return _favoriteListService.GetFavoriteMoviesOfUser(id);
+            return await _favoriteListService.GetFavoriteMoviesOfUserAsync(id);
         }
 
         [HttpPost]
-        public IActionResult AddToFavoriteList(MovieUser movieUser)
+        public async Task<IActionResult> AddToFavoriteList(MovieUser movieUser)
         {
-            var result = _favoriteListService.AddToFavoriteList(movieUser);
+            var result = await _favoriteListService.AddToFavoriteListAsync(movieUser);
 
             return result == false ? BadRequest() : Ok();
         }
 
         [HttpDelete]
-        public IActionResult RemoveFromFavoriteList(MovieUser movieUser)
+        public async Task<IActionResult> RemoveFromFavoriteList(MovieUser movieUser)
         {
-            var result = _favoriteListService.RemoveFromFavoriteList(movieUser);
+            var result = await _favoriteListService.RemoveFromFavoriteListAsync(movieUser);
 
             return result == false ? BadRequest() : Ok();
         }

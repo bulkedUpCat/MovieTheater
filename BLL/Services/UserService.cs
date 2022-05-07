@@ -1,55 +1,52 @@
-﻿using BBL.Validators;
-using BLL.Abstractions.Interfaces;
-using BLL.Validators;
+﻿using BLL.Email;
 using Core.DTOs;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
-using DataAccess;
-using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+using Microsoft.AspNetCore.WebUtilities;
+using NETCore.MailKit.Core;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
     public class UserService //: IUserService
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public UserService(UnitOfWork unitOfWork,
+        public UserService(IUnitOfWork unitOfWork,
             UserManager<User> userManager,
-            RoleManager<IdentityRole> roleIdentity)
+            SignInManager<User> signInManager,
+            RoleManager<IdentityRole> roleIdentity,
+            IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _roleManager = roleIdentity;
+            _signInManager = signInManager;
+            _emailService = emailService;
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return _unitOfWork.UserRepository.Get();
+            return await _unitOfWork.UserRepository.GetAsync();
         }
 
-        public User GetUser(int id)
+        public async Task<User> GetUser(int id)
         {
-            return _unitOfWork.UserRepository.Get(u => Int32.Parse(u.Id) == id).First();
+            return await _userManager.FindByIdAsync(id.ToString());
         }
 
-        public User GetUser(string email)
+        public async Task<User> GetUser(string email)
         {
-            return _unitOfWork.UserRepository.Get(u => u.Email == email).First();
+            return await _userManager.FindByEmailAsync(email);
         }
 
-        public async Task<User> LogIn(UserLoginDTO user)
+        public async Task<User> LogInAsync(UserLoginDTO user)
         {
             var foundUser = await _userManager.FindByEmailAsync(user.Email);
 
@@ -58,12 +55,17 @@ namespace BLL.Services
                 return null;
             }
 
-            var result = await _userManager.CheckPasswordAsync(foundUser, user.Password);
+            var result = await _signInManager.PasswordSignInAsync(foundUser, user.Password, false, false);
 
-            return result == false ? null : foundUser;
+            if (result.Succeeded)
+            {
+                return foundUser;
+            }
+
+            return null;
         }
 
-        public async Task<User> SignUp(UserRegisterDTO user)
+        public async Task<User> SignUpAsync(UserRegisterDTO user)
         {
             var userExists = await _userManager.FindByEmailAsync(user.Email);
 
@@ -83,40 +85,126 @@ namespace BLL.Services
 
             var result = await _userManager.CreateAsync(newUser, user.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return null;
+                /*var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                byte[] tokenBytes = Encoding.UTF8.GetBytes(token);
+                var tokenEncoded = WebEncoders.Base64UrlEncode(tokenBytes);
+
+                var confirmationLink = "https://localhost:7065/api/Auth/ConfirmEmailLink?token=" +
+                    tokenEncoded + "&email=" + user.Email;
+
+                var emailTemplate = new EmailTemplate();
+
+                emailTemplate.To = user.Email;
+                emailTemplate.UserId = newUser.Id;
+                emailTemplate.Link = confirmationLink;
+                emailTemplate.Subject = "Email Confirmation for MovieTheater";
+                emailTemplate.Body = $"<p>Hi {newUser.UserName}</p>" +
+                    $"<p>Please click here to confirm your account</p>" +
+                    $"<p>{confirmationLink}</p>" +
+                    "Thank you!";
+
+                var emailConfirmed = new EmailSender().SendSmtpMail(emailTemplate);*/
+
+                return newUser;
             }
 
-            return newUser;
+            return null;
         }
 
-        public void UpdateEntity(User user)
+
+        public async Task<bool> ConfirmEmailAsync(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            var tokenEncodedBytes = WebEncoders.Base64UrlDecode(token);
+            var tokenDecoded = Encoding.UTF8.GetString(tokenEncodedBytes);
+
+            var result = await _userManager.ConfirmEmailAsync(user, tokenDecoded);
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> ChangeUsernameAsync(ChangeUsernameDTO changeUsername)
+        {
+            if (changeUsername == null)
+            {
+                return false;
+            }
+
+            var user = await _userManager.FindByIdAsync(changeUsername.UserId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.UserName = changeUsername.NewUsername;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded;
+        }
+
+        public async Task<bool> ChangePasswordAsync(ChangePasswordDTO changePassword)
+        {
+            if (changePassword == null)
+            {
+                return false;
+            }
+
+            var user = await _userManager.FindByIdAsync(changePassword.UserId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, changePassword.NewPassword);
+
+            return result.Succeeded;
+        }
+
+        public async Task<bool> ChangeEmailAsync(ChangeEmailDTO changeEmail)
+        {
+            if (changeEmail == null)
+            {
+                return false;
+            }
+
+            var user = await _userManager.FindByIdAsync(changeEmail.UserId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.Email = changeEmail.Email;
+
+            var result =  await _userManager.UpdateAsync(user);
+
+            return result.Succeeded;
+        }
+
+        public async Task UpdateEntityAsync(User user)
         {
             try
             {
                 _unitOfWork.UserRepository.Update(user);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
 
             }
-        }
-
-        public IEnumerable<User> Where(Expression<Func<User,bool>> expression)
-        {
-            return _unitOfWork.UserRepository.Where(expression);
-        }
-
-        public User FirstOrDefault(Expression<Func<User, bool>> expression)
-        {
-            return _unitOfWork.UserRepository.FirstOrDefault(expression);
-        }
-
-        public bool Any(Expression<Func<User, bool>> expression)
-        {
-            return _unitOfWork.UserRepository.Any(expression);
         }
     }
 }

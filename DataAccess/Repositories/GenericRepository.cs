@@ -22,7 +22,7 @@ namespace DataAccess.Repositories
             dbSet = _context.Set<T>();
         }
 
-        public virtual IEnumerable<T> Get(
+        public virtual async Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "")
@@ -42,27 +42,27 @@ namespace DataAccess.Repositories
 
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                return await orderBy(query).ToListAsync();
             }
             else
             {
-                return query.ToList();
+                return await query.ToListAsync();
             }
         }
 
-        public virtual T GetByID(object id)
+        public async virtual Task<T> GetByIdAsync(object id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
 
-        public virtual void Insert(T entity)
+        public async virtual Task InsertAsync(T entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
         }
 
-        public virtual void Delete(object id)
+        public async virtual Task Delete(object id)
         {
-            T entityToDelete = dbSet.Find(id);
+            T entityToDelete = await dbSet.FindAsync(id);
             Delete(entityToDelete);
         }
 
@@ -79,21 +79,6 @@ namespace DataAccess.Repositories
         {
             dbSet.Attach(entityToUpdate);
             _context.Entry(entityToUpdate).State = EntityState.Modified;
-        }
-
-        public IEnumerable<T> Where(Expression<Func<T,bool>> expression)
-        {
-            return dbSet.Where(expression.Compile());
-        }
-
-        public bool Any(Expression<Func<T,bool>> expression)
-        {
-            return dbSet.Any(expression.Compile());
-        }
-
-        public T FirstOrDefault(Expression<Func<T,bool>> expression)
-        {
-            return dbSet.FirstOrDefault(expression.Compile());
         }
     }
 }

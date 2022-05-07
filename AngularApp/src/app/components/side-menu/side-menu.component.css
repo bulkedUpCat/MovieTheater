@@ -3,6 +3,19 @@
     margin-left: -17%;
     margin-top: 7%;
     position: fixed;
+    border-radius: 10px;
+}
+
+.sort-btn {
+    margin-left: 5%;
+    padding: 1%;
+}
+
+.close-btn {
+    display: none;
+    float: right;
+    padding-left: 2%;
+    padding-right: 2%;
 }
 
 .side-menu .main-option {
@@ -45,10 +58,18 @@
 }
 
 @media screen and (max-width: 1050px) {
+    .sort-btn {
+        display: inline;
+    }
+    .close-btn {
+        display: inline;
+    }
     .side-menu {
-        width: 26%;
+        width: 40%;
         margin: 0;
-        color: red;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background-color: #fff;
     }
     .side-menu .main-option {

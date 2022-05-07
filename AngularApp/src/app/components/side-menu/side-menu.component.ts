@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { throwIfEmpty } from 'rxjs';
 import { FilterModel } from 'src/app/model/filters';
+import { SharedParamsService } from 'src/app/services/shared-params.service';
 
 
 @Component({
@@ -23,16 +24,27 @@ export class SideMenuComponent implements OnInit {
   runtimes: Array<string> = ['10m', '30m', '1h', '1.5h', '2h'];
   showRuntime: boolean;
 
-  constructor() { }
+  constructor(public sharedParamsService: SharedParamsService) { }
 
   ngOnInit(): void {
     this.filterModel = new FilterModel();
     this.filterModel.genres = new Array<string>();
     this.filterModel.years = new Array<number>();
+    this.chosenGenres = this.sharedParamsService.genres;
+    this.chosenYears = this.sharedParamsService.years;
+    this.showOptions = this.sharedParamsService.showSortingOptions;
+    this.chosenGenres = this.sharedParamsService.genres;
+    this.showYears = this.sharedParamsService.showYears;
   }
 
   showSortingOptions(){
     this.showOptions = !this.showOptions;
+    this.sharedParamsService.showSortingOptions = !this.sharedParamsService.showSortingOptions;
+  }
+
+  closeMenu(){
+    this.showOptions = false;
+    this.sharedParamsService.showSortingOptions = false;
   }
 
   onSortByGenre(genre: string){
@@ -56,6 +68,8 @@ export class SideMenuComponent implements OnInit {
     }
 
     this.filterModel.genres = this.chosenGenres;
+    this.sharedParamsService.genres = this.chosenGenres;
+    this.sharedParamsService.genres = this.chosenGenres;
     this.filters.emit(this.filterModel);
   }
 
@@ -89,6 +103,7 @@ export class SideMenuComponent implements OnInit {
     }
 
     this.filterModel.years = this.chosenYears;
+    this.sharedParamsService.years = this.chosenYears;
     this.filters.emit(this.filterModel);
   }
 

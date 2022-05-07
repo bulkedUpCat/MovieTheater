@@ -18,24 +18,24 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Movie> GetWatchLaterMoviesOfUser(string id)
+        public async Task<IEnumerable<Movie>> GetWatchLaterMoviesOfUser(string id)
         {
-            return _userListService.GetWatchLaterMoviesOfUser(id);
+            return await _userListService.GetWatchLaterMoviesOfUserAsync(id);
         }
 
         [HttpPost]
-        public IActionResult AddToWatchLaterList(MovieUser movieUser)
+        public async Task<IActionResult> AddToWatchLaterList(MovieUser movieUser)
         {
 
-            var result = _userListService.AddToWatchLaterList(movieUser);
+            var result = await _userListService.AddToWatchLaterListAsync(movieUser);
 
             return result == false ? BadRequest() : Ok();
         }
 
         [HttpDelete]
-        public IActionResult RemoveFromWatchLaterList(MovieUser movieUser)
+        public async Task<IActionResult> RemoveFromWatchLaterList(MovieUser movieUser)
         {
-            var result = _userListService.RemoveFromWatchLaterList(movieUser);
+            var result = await _userListService.RemoveFromWatchLaterListAsync(movieUser);
 
             return result == false ? BadRequest() : Ok();
         }

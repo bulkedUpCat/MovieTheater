@@ -14,4 +14,10 @@
     <span *ngIf="userLoggedIn">
       <a routerLink="logout" routerLinkActive="active">Log out</a>
     </span>
+    <span *ngIf="isAdmin">
+      <a (click)="openAddMovie()">Add movie</a>
+    </span>
+    <span *ngIf="isAdmin">
+      <a routerLink="user-table" routerLinkActive="active">User table</a>
+    </span>
 </div>

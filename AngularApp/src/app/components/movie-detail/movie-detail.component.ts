@@ -37,14 +37,15 @@ export class MovieDetailComponent implements OnInit {
       this.imageUrl = 'assets/images/' + this.movie?.image;
     },err => console.log(err));
 
+
+
     this.getUserInfo();
 
-    this.authService.getUserByEmail(this.userInfo.email).subscribe(u =>{
-      this.loggedUserId = u?.id;
-    });
+    this.loggedUserId = this.userInfo.jti;
 
     this.createForm();
-    this.imgToShowAndHide = document.getElementById('fullSize');
+
+    this.createImgPopup();
   }
 
   createForm(){
@@ -60,20 +61,20 @@ export class MovieDetailComponent implements OnInit {
     })
   }
 
-  onShowFullSize(){
-    this.fullSizeImage = true;
-    let e = document.getElementsByTagName('html');
-    for(let i = 0; i < e.length; i++){
-      //e[i].style.opacity = '0.5';
-    }
-    //this.imgToShowAndHide.style.opacity = '2';
-  }
+  createImgPopup(){
+    const imgPopup = document.getElementById('grid-item-image');
+    const popup = document.getElementById('img-popup');
+      const overlay = document.getElementById('overlay');
 
-  onHideImage(){
-    this.fullSizeImage = false;
-    let e = document.getElementsByTagName('html');
-    for(let i = 0; i < e.length; i++){
-      //e[i].style.opacity = '1';
-    }
+    imgPopup.firstChild.addEventListener('click',() => {
+      popup.classList.add('active');
+      overlay.classList.add('active');
+    })
+
+    overlay.addEventListener('click', () => {
+      popup.classList.remove('active');
+      overlay.classList.remove('active');
+    })
+
   }
 }

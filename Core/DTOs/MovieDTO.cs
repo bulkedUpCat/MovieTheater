@@ -9,7 +9,10 @@ namespace Core.DTOs
     public class MovieDTO
     {
         public string Title { get; set; }
-        public IEnumerable<string> Genre { get; set; }
-        public int YearReleased { get; set; }
+        public string Description { get; set; }
+        public string Director { get; set; }
+        public int Year { get; set; }
+        public double Runtime { get; set; }
+        public IEnumerable<string> Genres { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace BBL.Validators
             _userService = userService;
         }
 
-        public bool UserPropertiesAreValid(UserRegisterDTO user)
+       /* public bool UserPropertiesAreValid(UserRegisterDTO user)
         {
             if (string.IsNullOrEmpty(user.Name) ||
                 string.IsNullOrEmpty(user.Login) ||
@@ -39,7 +39,7 @@ namespace BBL.Validators
             }
 
             return true;
-        }
+        }*/
 
         public bool PasswordIsValid(string password)
         {

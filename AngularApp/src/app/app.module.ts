@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +23,20 @@ import { ListButtonsComponent } from './components/list-buttons/list-buttons.com
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentService } from './services/comment.service';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
+import { UserService } from './services/user.service';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './modules/material/material.module';
+import { SpinnerService } from './services/spinner.service';
+import { SpinnerInterceptor } from './interceptors/spinner-interceptor';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { NotifierService } from './services/notifier.service';
+import { NotifierComponent } from './components/notifier/notifier.component';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { AddMovieComponent } from './components/add-movie/add-movie.component';
+import { UserTableComponent } from './components/user-table/user-table.component';
+import { SharedParamsService } from './services/shared-params.service';
 
 export function tokenGetter() {
   return localStorage.getItem("TokenInfo");
@@ -41,7 +55,13 @@ export function tokenGetter() {
     HomeComponent,
     ListButtonsComponent,
     CommentComponent,
-    SideMenuComponent
+    SideMenuComponent,
+    PaginationComponent,
+    SpinnerOverlayComponent,
+    NotifierComponent,
+    DialogComponent,
+    AddMovieComponent,
+    UserTableComponent
   ],
   imports: [
     BrowserModule,
@@ -57,13 +77,25 @@ export function tokenGetter() {
         disallowedRoutes: []
       }
     }),
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    OverlayModule
   ],
   providers: [
     MovieService,
     AuthService,
+    UserService,
     CommentService,
-    AuthGuard
+    SpinnerService,
+    NotifierService,
+    SharedParamsService,
+    AuthGuard,
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: SpinnerInterceptor,
+    //   multi: true,
+    // }
   ],
   bootstrap: [AppComponent]
 })

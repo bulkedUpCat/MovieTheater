@@ -1,5 +1,6 @@
 ﻿using Core.DTOs;
 using Core.Models;
+using DAL.Abstractions.Interfaces;
 using DataAccess;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,16 @@ namespace BLL.Services
 {
     public class FavoriteListService
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public FavoriteListService(UnitOfWork unitOfWork)
+        public FavoriteListService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Movie> GetFavoriteMoviesOfUser(string id)
+        public async Task<IEnumerable<Movie>> GetFavoriteMoviesOfUserAsync(string id)
         {
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == id, null, "FavoriteListMovies")
+            var user = (await _unitOfWork.UserRepository.GetAsync(u => u.Id == id, null, "FavoriteListMovies"))
                 .FirstOrDefault();
 
             if (user == null)
@@ -31,16 +32,16 @@ namespace BLL.Services
             return user.FavoriteListMovies;
         }
 
-        public bool AddToFavoriteList(MovieUser movieUser)
+        public async Task<bool> AddToFavoriteListAsync(MovieUser movieUser)
         {
             if (movieUser == null)
             {
                 return false;
             }
 
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == movieUser.UserId, null, "FavoriteListMovies")
+            var user = (await _unitOfWork.UserRepository.GetAsync(u => u.Id == movieUser.UserId, null, "FavoriteListMovies"))
                 .FirstOrDefault();
-            var movie = _unitOfWork.MovieRepository.GetByID(movieUser.MovieId);
+            var movie = await _unitOfWork.MovieRepository.GetByIdAsync(movieUser.MovieId);
 
             if (user == null ||
                 movie == null ||
@@ -52,7 +53,7 @@ namespace BLL.Services
             try
             {
                 user.FavoriteListMovies.Add(movie);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -62,16 +63,16 @@ namespace BLL.Services
             return true;
         }
 
-        public bool RemoveFromFavoriteList(MovieUser movieUser)
+        public async Task<bool> RemoveFromFavoriteListAsync(MovieUser movieUser)
         {
             if (movieUser == null)
             {
                 return false;
             }
 
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == movieUser.UserId, null, "FavoriteListMovies")
+            var user = (await _unitOfWork.UserRepository.GetAsync(u => u.Id == movieUser.UserId, null, "FavoriteListMovies"))
                 .FirstOrDefault();
-            var movie = _unitOfWork.MovieRepository.GetByID(movieUser.MovieId);
+            var movie = await _unitOfWork.MovieRepository.GetByIdAsync(movieUser.MovieId);
 
             if (user == null ||
                 movie == null ||
@@ -83,7 +84,7 @@ namespace BLL.Services
             try
             {
                 user.FavoriteListMovies.Remove(movie);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {

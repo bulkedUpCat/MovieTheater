@@ -1,3 +1,5 @@
+using AutoMapper;
+using BLL.Profiles;
 using BLL.Services;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
@@ -10,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MovieTheaterApi.Hubs;
 using MovieTheaterApi.JWT;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -34,7 +38,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    //options.SignIn.RequireConfirmedEmail = true;
+})
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -44,10 +51,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<JwtHandler>();
 builder.Services.AddSingleton<IConfigurationRoot>(configuration);
-builder.Services.AddTransient<IGenericRepository<Movie>, GenericRepository<Movie>>();
+builder.Services.AddTransient<IMovieRepository, MovieRepository>();
 builder.Services.AddTransient<IGenericRepository<User>, GenericRepository<User>>();
-builder.Services.AddTransient<IGenericRepository<Comment>, GenericRepository<Comment>>();
-builder.Services.AddTransient<UnitOfWork>();
+builder.Services.AddTransient<ICommentRepository, CommentRepository>();
+builder.Services.AddTransient<IMovieGenreRepository, MovieGenreRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<MovieService>();
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<CommentService>();
@@ -69,6 +77,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Jwt")["Key"]))
         };
     });
+
+// AutoMapper configuration
+builder.Services.AddSingleton((IMapper)new Mapper(new MapperConfiguration(c =>
+{
+    c.AddProfile(new UserMapperProfile());
+    c.AddProfile(new CommentMapperProfile());
+    c.AddProfile(new MovieMapperProfile());
+})));
+
+// MailKit configuration
+builder.Services.AddMailKit(config =>
+{
+    var mailKitOptions = configuration.GetSection("Email").Get<MailKitOptions>();
+    config.UseMailKit(mailKitOptions);
+});
 
 var app = builder.Build();
 

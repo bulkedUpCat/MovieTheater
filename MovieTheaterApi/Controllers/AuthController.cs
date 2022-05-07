@@ -41,7 +41,7 @@ namespace MovieTheaterApi.Controllers
                 return BadRequest();
             }
 
-            var foundUser = await _userService.LogIn(user);
+            var foundUser = await _userService.LogInAsync(user);
 
             if (foundUser == null)
             {
@@ -76,7 +76,7 @@ namespace MovieTheaterApi.Controllers
                 return BadRequest();
             }
 
-            var newUser = await _userService.SignUp(user);
+            var newUser = await _userService.SignUpAsync(user);
 
             if (newUser == null)
             {
@@ -84,6 +84,20 @@ namespace MovieTheaterApi.Controllers
             }
 
             return Ok(newUser);
+        }
+
+
+        [HttpGet("ConfirmEmailLink")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var result = await _userService.ConfirmEmailAsync(token, email);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction("https://localhost:4200/login");
         }
     }
 }

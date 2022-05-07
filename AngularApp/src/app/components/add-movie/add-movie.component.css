@@ -1,0 +1,13 @@
+.field {
+    width: 100%;
+    background-color: #FFF;
+}
+
+.submit-btn {
+    padding: .5% 4%;
+}
+
+.reset-btn {
+    padding: .5% 4%;
+    margin-right: 3%;
+}

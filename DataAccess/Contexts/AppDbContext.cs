@@ -25,11 +25,17 @@ namespace DataAccess.Contexts
                 .WithMany(m => m.FavoriteListUsers)
                 .UsingEntity(t => t.ToTable("FavoriteList"));
 
+            modelBuilder.Entity<Movie>()
+                .HasMany(m => m.Genres)
+                .WithMany(m => m.Movies)
+                .UsingEntity(t => t.ToTable("MovieGenres"));
+
             base.OnModelCreating(modelBuilder);
         }
 
-        DbSet<User> Users { get; set; }
-        DbSet<Movie> Movies { get; set; }
-        DbSet<Comment> Comments { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<MovieGenre> MovieGenre { get; set; }
     }
 }

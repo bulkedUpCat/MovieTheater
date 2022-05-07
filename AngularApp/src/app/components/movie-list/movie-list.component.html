@@ -7,3 +7,4 @@
         <app-movie [movie]="movie"></app-movie>
     </div>
 </div>
+<app-pagination [totalPages]="filteredMovies.length/movieParameters.pageSize" (next)="onNextPage($event)" (previous)="onPreviousPage($event)"></app-pagination>

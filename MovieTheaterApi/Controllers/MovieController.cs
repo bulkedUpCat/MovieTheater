@@ -22,40 +22,47 @@ namespace MovieTheaterApi.Controllers
             _userService = userService;
         }
 
-        // GET: api/<MovieController>
         [HttpGet]
-        public IEnumerable<Movie> GetAllMovies()
+        public async Task<ActionResult<IEnumerable<Movie>>> GetAllMovies([FromQuery] MovieParameters movieParameters)
         {
-           
-            return _movieService.GetAllMovies();
+            var movies = await _movieService.GetPagedMoviesAsync(movieParameters);
+
+            var data = new
+            {
+                movies.TotalCount,
+                movies.PageSize,
+                movies.CurrentPage,
+                movies.HasNext,
+                movies.HasPrevious
+            };
+
+            return Ok(movies);
         }
 
-        // GET api/<MovieController>/5
         [HttpGet("{id}")]
-        public Movie Get(int id)
+        public async Task<Movie> Get(int id)
         {
-            return _movieService.FirstOrDefault(m => m.Id == id);
+            return await _movieService.GetMovieById(id);
         }
 
-        // POST api/<MovieController>
         [HttpPost]
-        public async Task Post(MovieDTO movieDTO)
+        public async Task<IActionResult> Post(MovieDTO movieDTO)
         {
-            /*var movie = _movieService.FirstOrDefault(
-                m => m.Title == movieDTO.Title &&
-                m.Genre == movieDTO.Genre &&
-                m.YearReleased == movieDTO.YearReleased);
+            var result = await _movieService.AddMovieAsync(movieDTO);
 
-           await _movieService.AddMovie(movie);*/
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
-        // PUT api/<MovieController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<MovieController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

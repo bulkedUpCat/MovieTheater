@@ -10,20 +10,17 @@ namespace DAL.Abstractions.Interfaces
 {
     public interface IGenericRepository<T>
     {
-        IEnumerable<T> Get(
+        Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "");
 
-        T GetByID(object id);
+        Task<T> GetByIdAsync(object id);
 
-        void Insert(T entity);
+        Task InsertAsync(T entity);
 
-        void Delete(object id);
+        Task Delete(object id);
         void Delete(T entityToDelete);
         void Update(T entityToUpdate);
-        IEnumerable<T> Where(Expression<Func<T, bool>> expression);
-        bool Any(Expression<Func<T, bool>> expression = null);
-        T FirstOrDefault(Expression<Func<T, bool>> expression);
     }
 }

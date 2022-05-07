@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-user-login',
@@ -12,9 +13,10 @@ import { AuthService } from 'src/app/services/auth.service';
 export class UserLoginComponent implements OnInit {
   submitted: boolean;
   returnUrl: string;
+  loaded: boolean = true;
   public loginForm: FormGroup;
   constructor(private authService: AuthService,
-              private http: HttpClient,
+              private notifier: NotifierService,
               private fb: FormBuilder,
               private route: ActivatedRoute,
               private router: Router) { }
@@ -40,6 +42,7 @@ export class UserLoginComponent implements OnInit {
   }
 
   onLogin(){
+    this.loaded = false;
     this.submitted = true;
 
     if (!this.loginForm.valid){
@@ -54,7 +57,12 @@ export class UserLoginComponent implements OnInit {
 
     this.authService.logIn(user).subscribe(x => {
       this.router.navigateByUrl('/movies');
-    },err => alert("Wrong email or password!"));
+      this.loaded = true;
+      this.notifier.showNotification("You've successfully logged in!", 'Ok', 'success');
+    },err => {
+      this.loaded = true;
+      this.notifier.showNotification('Wrong email or password, try again!', 'OK','error');
+    });
 
     this.loginForm.reset();
   }

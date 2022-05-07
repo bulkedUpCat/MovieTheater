@@ -1,6 +1,6 @@
 <form (ngSubmit)="addComment()" [formGroup]="commentForm">
     <div class="comment">
-        <input type="text" placeholder="Leave a comment..." formControlName="text">
+        <input *ngIf="loggedUserId" type="text" placeholder="Leave a comment..." formControlName="text">
         <div class="comment-items" *ngFor="let comment of comments">
             <h3 class="sender"> {{comment.userName}}</h3>
             <h3 class="content">{{comment.text}}</h3>

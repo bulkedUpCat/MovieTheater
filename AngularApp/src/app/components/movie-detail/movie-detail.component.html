@@ -1,9 +1,11 @@
-<img id="fullSize" [hidden]="!fullSizeImage" (click)="onHideImage()" [src]="imageUrl">
+<img id="img-popup" [src]="imageUrl">
+
+
 <a routerLink="/movies" routerLinkActive="active">Go back</a>
 <h4>{{movie?.title}} ({{movie?.releaseDate}})</h4>
 <div class="grid-container">
-    <div class="grid-item-image">
-        <a (click)="onShowFullSize()">
+    <div id="grid-item-image" class="grid-item-image">
+        <a id="open-img-popup">
             <img [src]="imageUrl">
         </a>
     </div>
@@ -12,7 +14,7 @@
             <p>Genre: </p>
         </div>
         <div>
-            <p>{{movie?.genre}}</p>
+            <p><span *ngFor="let genre of movie?.genres">{{genre.name}} </span></p>
         </div>
         <div>
             <p>Release Year: </p>
@@ -42,15 +44,6 @@
 
 <app-list-buttons [movie]="movie" [loggedUserId]="loggedUserId" *ngIf="movie && loggedUserId"></app-list-buttons>
 
-<app-comment *ngIf="loggedUserId" [loggedUserId]="loggedUserId" [movie]="movie"></app-comment>
-<!-- <form (ngSubmit)="addComment()" [formGroup]="commentForm">
-    <div class="comment">
-        <input type="text" placeholder="Leave a comment..." formControlName="text">
-        <div class="comment-items" *ngFor="let comment of comments">
-            <h3 class="sender">{{comment.userName}}</h3>
-            <h3 class="content">{{comment.text}}</h3>
-            <h3 class="date">{{comment.date}}</h3>
-            <hr>
-        </div>
-    </div>
-</form> -->
+<app-comment [loggedUserId]="loggedUserId" [movie]="movie"></app-comment>
+
+<div id="overlay"></div>

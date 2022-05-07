@@ -61,8 +61,4 @@ export class AuthService {
     }
     return of(null);
   }
-
-  getUserByEmail(email: string) : Observable<User>{
-    return this.http.get<User>(`${environment.apiUrl}/User/` + email);
-  }
 }

@@ -1,5 +1,6 @@
 ﻿using Core.DTOs;
 using Core.Models;
+using DAL.Abstractions.Interfaces;
 using DataAccess;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,17 @@ namespace BLL.Services
 {
     public class WatchLaterListService
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public WatchLaterListService(UnitOfWork unitOfWork)
+        public WatchLaterListService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Movie> GetWatchLaterMoviesOfUser(string id)
+        public async Task<IEnumerable<Movie>> GetWatchLaterMoviesOfUserAsync(string id)
         {
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == id, null, "WatchLaterMovies").FirstOrDefault();
+            var user = (await _unitOfWork.UserRepository.GetAsync(u => u.Id == id, null, "WatchLaterMovies"))
+                .FirstOrDefault();
 
             if (user == null)
             {
@@ -30,16 +32,16 @@ namespace BLL.Services
             return user.WatchLaterMovies;
         }
 
-        public bool AddToWatchLaterList(MovieUser movieUser)
+        public async Task<bool> AddToWatchLaterListAsync(MovieUser movieUser)
         {
             if (movieUser == null)
             {
                 return false;
             }
 
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == movieUser.UserId, null, "WatchLaterMovies")
+            var user = (await _unitOfWork.UserRepository.GetAsync(u => u.Id == movieUser.UserId, null, "WatchLaterMovies"))
                 .FirstOrDefault();
-            var movie = _unitOfWork.MovieRepository.GetByID(movieUser.MovieId);
+            var movie = await _unitOfWork.MovieRepository.GetByIdAsync(movieUser.MovieId);
 
             if (user == null ||
                 movie == null ||
@@ -51,7 +53,7 @@ namespace BLL.Services
             try
             {
                 user.WatchLaterMovies.Add(movie);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -61,16 +63,16 @@ namespace BLL.Services
             return true;
         }
 
-        public bool RemoveFromWatchLaterList(MovieUser movieUser)
+        public async Task<bool> RemoveFromWatchLaterListAsync(MovieUser movieUser)
         {
             if (movieUser == null)
             {
                 return false;
             }
 
-            var user = _unitOfWork.UserRepository.Get(u => u.Id == movieUser.UserId, null, "WatchLaterMovies")
+            var user = (await _unitOfWork.UserRepository.GetAsync(u => u.Id == movieUser.UserId, null, "WatchLaterMovies"))
                 .FirstOrDefault();
-            var movie = _unitOfWork.MovieRepository.GetByID(movieUser.MovieId);
+            var movie = await  _unitOfWork.MovieRepository.GetByIdAsync(movieUser.MovieId);
 
             if (user == null ||
                 movie == null ||
@@ -82,7 +84,7 @@ namespace BLL.Services
             try
             {
                 user.WatchLaterMovies.Remove(movie);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.SaveChanges();
             }
             catch(Exception ex)
             {

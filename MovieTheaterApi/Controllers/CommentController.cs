@@ -18,27 +18,27 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Comment> GetAllComments()
+        public async Task<IEnumerable<Comment>> GetAllComments()
         {
-            return _commentService.GetAllComments();
+            return await _commentService.GetAllCommentsAsync();
         }
 
 
         [HttpGet("{id}")]
-        public IEnumerable<Comment> GetComments(int id)
+        public async Task<IEnumerable<Comment>> GetComments(int id)
         {
-            return _commentService.GetCommentsByMovieId(id);
+            return await _commentService.GetCommentsByMovieId(id);
         }
 
         [HttpPost]
-        public ActionResult<Comment> AddComment(CommentDTO comment)
+        public async Task<ActionResult<Comment>> AddComment(CommentDTO comment)
         {
             if (comment == null)
             {
                 return BadRequest();
             }
 
-            var result =_commentService.AddComment(comment);
+            var result = await _commentService.AddCommentAsync(comment);
 
             if (result == null)
             {

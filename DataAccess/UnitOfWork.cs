@@ -10,56 +10,71 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
-        private IGenericRepository<User> _userRepo;
-        private IGenericRepository<Movie> _movieRepo;
-        private IGenericRepository<Comment> _commentRepo;
+        private IUserRepository _userRepo;
+        private IMovieRepository _movieRepo;
+        private ICommentRepository _commentRepo;
+        private IMovieGenreRepository _movieGenreRepo;
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
         }
 
-        public IGenericRepository<User> UserRepository {
+        public IUserRepository UserRepository {
             get
             {
                 if (_userRepo == null)
                 {
-                    _userRepo = new GenericRepository<User>(_context);
+                    _userRepo = new UserRepository(_context);
                 }
 
                 return _userRepo;
             } 
         }
 
-        public IGenericRepository<Movie> MovieRepository
+        public IMovieRepository MovieRepository
         {
             get
             {
                 if (_movieRepo == null)
                 {
-                    _movieRepo = new GenericRepository<Movie>(_context);
+                    _movieRepo = new MovieRepository(_context);
                 }
 
                 return _movieRepo;
             }
         }
 
-        public IGenericRepository<Comment> CommentRepository { 
+        public ICommentRepository CommentRepository { 
             get
             {
                 if (_commentRepo == null)
                 {
-                    _commentRepo = new GenericRepository<Comment>(_context);
+                    _commentRepo = new CommentRepository(_context);
                 }
 
                 return _commentRepo;
             } 
         }
-        public void SaveChanges()
+
+        public IMovieGenreRepository MovieGenreRepository
         {
-            _context.SaveChanges();
+            get
+            {
+                if (_movieGenreRepo == null)
+                {
+                    _movieGenreRepo = new MovieGenreRepository(_context);
+                }
+
+                return _movieGenreRepo;
+            }
+        }
+
+        public async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

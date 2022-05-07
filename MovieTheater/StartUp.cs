@@ -33,7 +33,7 @@ namespace MovieTheater
         public async Task Do()
         {
 
-            var movies = _service.GetAllMovies();
+            var movies = await _service.GetAllMoviesAsync();
             /*FirstPage firstPage = new FirstPage();
             // log in and sign up functionality
             bool alreadySignedUp = firstPage.AskToLogInOrSignUp();

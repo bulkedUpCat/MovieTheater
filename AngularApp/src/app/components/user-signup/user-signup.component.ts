@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class UserSignupComponent implements OnInit {
   submitted: boolean = false;
+  loaded: boolean = true;
   signupForm: FormGroup;
   constructor(private fb: FormBuilder,
               private authService: AuthService,
@@ -20,6 +21,7 @@ export class UserSignupComponent implements OnInit {
   }
 
   onSignup(){
+    this.loaded = true;
     this.submitted = true;
 
     if(!this.signupForm.valid){
@@ -28,7 +30,10 @@ export class UserSignupComponent implements OnInit {
 
     const user = this.signupForm.value;
     console.log(user);
-    this.authService.signUp(user).subscribe(x => this.router.navigate(['/login']),
+    this.authService.signUp(user).subscribe(x => {
+      this.router.navigate(['/login']);
+      this.loaded = true;
+    },
                             err => console.log(err));
   }
 

@@ -1,0 +1,38 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="movieForm">
+
+    <mat-form-field class="field" appearance="fill">
+        <mat-label>Enter the title</mat-label>
+        <input matInput formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="fill">
+        <mat-label>Enter the genres (use ',' for multiple ones)</mat-label>
+        <input matInput formControlName="genres">
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="fill">
+        <mat-label>Enter the description</mat-label>
+        <input matInput formControlName="description">
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="fill">
+        <mat-label>Enter the year</mat-label>
+        <input matInput formControlName="year">
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="fill">
+        <mat-label>Enter the director</mat-label>
+        <input matInput formControlName="director">
+    </mat-form-field>
+
+    <mat-form-field class="field" appearance="fill">
+        <mat-label>Enter the runtime</mat-label>
+        <input matInput formControlName="runtime">
+    </mat-form-field>
+
+    <div style="text-align: center">
+        <button class="reset-btn" mat-raised-button type="reset">Reset</button>
+        <button class="submit-btn" mat-raised-button type="submit">Submit</button>
+    </div>
+
+</form>

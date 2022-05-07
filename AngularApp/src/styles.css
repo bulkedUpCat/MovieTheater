@@ -16,3 +16,23 @@ html {
     height: 100%;
     font-size: 100%;
 }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.error.mat-snack-bar-container {
+    background: #cc0000;
+    color: #FFF;
+}
+
+.success.mat-snack-bar-container {
+    background: #00cc00;
+    color: #FFF;
+}

@@ -1,6 +1,8 @@
 export interface User{
-  id: string,
-  email: string
+  id: string;
+  email: string;
+  userName: string;
+  comments: Array<Comment>;
 }
 
 export interface UserLogin {
@@ -16,4 +18,19 @@ export interface UserSignUp{
   password: string;
   confirmPassword: string;
   age: number;
+}
+
+export class ChangeUsernameDTO{
+  userId: string;
+  newUsername: string;
+}
+
+export interface ChangePasswordDTO{
+  userId: string;
+  newPassword: string;
+}
+
+export class ChangeEmailDTO{
+  userId: string;
+  newEmail: string;
 }

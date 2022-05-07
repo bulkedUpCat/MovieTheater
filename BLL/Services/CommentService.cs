@@ -1,5 +1,7 @@
-﻿using Core.DTOs;
+﻿using AutoMapper;
+using Core.DTOs;
 using Core.Models;
+using DAL.Abstractions.Interfaces;
 using DataAccess;
 using System;
 using System.Collections.Generic;
@@ -11,55 +13,61 @@ namespace BLL.Services
 {
     public class CommentService
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CommentService(UnitOfWork unitOfWork)
+        public CommentService(IUnitOfWork unitOfWork,
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Comment> GetAllComments()
+        public async Task<IEnumerable<Comment>> GetAllCommentsAsync()
         {
-            return _unitOfWork.CommentRepository.Get();
+            return await _unitOfWork.CommentRepository.GetAsync();
         }
 
-        public Comment GetCommentById(int id)
+        public async Task<Comment> GetCommentByIdAsync(int id)
         {
-            return _unitOfWork.CommentRepository.Where(c => c.Id == id).FirstOrDefault();
+            return await _unitOfWork.CommentRepository.GetByIdAsync(id);
         }
 
-        public IEnumerable<Comment> GetCommentsByMovieId(int movieId)
+        public async Task<IEnumerable<Comment>> GetCommentsByMovieId(int movieId)
         {
-            var comments = _unitOfWork.CommentRepository.Where(c => c.MovieId == movieId).ToList();
+            var comments = await _unitOfWork.CommentRepository.GetByMovieIdAsync(movieId);
             return comments;
         }
 
-        public Comment AddComment(CommentDTO commentDTO)
+        public async Task<Comment> AddCommentAsync(CommentDTO commentDTO)
         {
             if (commentDTO == null)
             {
                 return null;
             }
 
-            var user = _unitOfWork.UserRepository.GetByID(commentDTO.UserId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(commentDTO.UserId);
 
             if (user == null)
             {
                 return null;
             }
 
-            var comment = new Comment()
+            var comment = _mapper.Map<Comment>(commentDTO);
+            comment.UserName = user.UserName;
+
+            /*var comment = new Comment()
             {
                 UserName = user.UserName,
                 UserId = commentDTO.UserId,
                 MovieId = commentDTO.MovieId,
                 Text = commentDTO.Text
-            };
+            };*/
 
             try
             {
-                _unitOfWork.CommentRepository.Insert(comment);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.CommentRepository.InsertAsync(comment);
+                await _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {

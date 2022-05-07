@@ -4,6 +4,7 @@ using Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MovieTheaterApi.JWT;
 using System.IdentityModel.Tokens.Jwt;
@@ -34,6 +35,16 @@ namespace MovieTheaterApi.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetALl()
+        {
+            var users = await _userManager.Users
+                .Include(u => u.Comments)
+                .ToListAsync();
+
+            return users;
+        }
+
 
         [HttpGet]
         [Route("users/{id}")]
@@ -52,7 +63,7 @@ namespace MovieTheaterApi.Controllers
         [HttpGet("{email}")]
         public IActionResult GetByEmail(string email)
         {
-            var user = _userService.FirstOrDefault(u => u.Email == email);
+            var user = _userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
@@ -60,6 +71,33 @@ namespace MovieTheaterApi.Controllers
             }
             return Ok(user);
         }
+
+
+        [HttpPost("changeUsername")]
+        public async Task<IActionResult> ChangeUsername(ChangeUsernameDTO changeUsername)
+        {
+            var result = await _userService.ChangeUsernameAsync(changeUsername);
+
+            return result ? Ok() : BadRequest();
+        }
+
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO changePassword)
+        {
+            var result = await _userService.ChangePasswordAsync(changePassword);
+
+            return result ? Ok() : BadRequest();
+        }
+
+        [HttpPost("changeEmail")]
+        public async Task<IActionResult> ChangeEmail(ChangeEmailDTO changeEmail)
+        {
+            var result = await _userService.ChangeEmailAsync(changeEmail);
+
+            return result ? Ok() : BadRequest();
+        }
+
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
