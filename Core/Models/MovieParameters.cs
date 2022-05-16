@@ -25,5 +25,8 @@ namespace Core.Models
 
         public List<string> Genres { get; set; } = new List<string>();
         public List<string> Years { get; set; } = new List<string>();
+        public bool WatchLater { get; set; }
+        public bool FavoriteList { get; set; }
+        public string UserEmail { get; set; }
     }
 }

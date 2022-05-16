@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="input">
-            <input class="input-item" type="text" placeholder="Enter your age" formControlName="age" />
+            <input class="input-item" type="number" placeholder="Enter your age" formControlName="age" />
             <div class="error" *ngIf="submitted && f['age'].errors">
                 <div *ngIf="f['age'].errors['required']">
                     This field is required

@@ -29,7 +29,7 @@ namespace MovieTheaterApi.JWT
             return new SigningCredentials(secret,SecurityAlgorithms.HmacSha256);
         }
 
-        public List<Claim> GetClaims(IdentityUser user)
+        public async Task<List<Claim>> GetClaims(User user)
         {
             var claims = new List<Claim>()
             {
@@ -37,6 +37,13 @@ namespace MovieTheaterApi.JWT
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, user.Id)
             };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             return claims;
         }

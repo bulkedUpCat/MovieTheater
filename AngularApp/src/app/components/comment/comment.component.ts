@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Movie } from 'src/app/model/movie';
+import { AuthService } from 'src/app/services/auth.service';
 import { CommentService } from 'src/app/services/comment.service';
 
 @Component({
@@ -10,20 +11,18 @@ import { CommentService } from 'src/app/services/comment.service';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent implements OnInit, OnChanges {
+export class CommentComponent implements OnInit {
   @Input() movie: Movie;
   @Input() loggedUserId: string;
+  isLoggedIn: boolean;
   commentForm: FormGroup;
   comments: any[];
   userId: number;
 
   constructor(private fb: FormBuilder,
     private commentService: CommentService,
+    private authService: AuthService,
     private route: ActivatedRoute) { }
-
-  ngOnChanges(): void {
-
-  }
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -33,6 +32,10 @@ export class CommentComponent implements OnInit, OnChanges {
       this.comments.reverse();
       console.log(this.comments);
     },err => console.log(err));
+
+    this.authService.isLoggedIn.subscribe( u => {
+      this.isLoggedIn = u;
+    });
 
     this.createForm();
   }
@@ -52,6 +55,7 @@ export class CommentComponent implements OnInit, OnChanges {
     var comment = this.commentForm.value;
     comment.movieId = this.movie.id;
     comment.userId = this.loggedUserId;
+    this.commentForm.reset();
 
     this.commentService.addComment(comment).subscribe(c =>
     {

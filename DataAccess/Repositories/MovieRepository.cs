@@ -2,6 +2,7 @@
 using Core.Models;
 using DAL.Abstractions.Interfaces;
 using DataAccess.Contexts;
+using DataAccess.Dapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,26 @@ namespace DataAccess.Repositories
     public class MovieRepository : IMovieRepository
     {
         private readonly AppDbContext _context;
+        private readonly AppReadDbConnection _readDbConnection;
+        private readonly AppWriteDbConnection _writeDbConnection;
 
-        public MovieRepository(AppDbContext context)
+        public MovieRepository(AppDbContext context,
+            AppReadDbConnection readDbConnection)
         {
             _context = context;
+            _readDbConnection = readDbConnection;
+            //_writeDbConnection = writeDbConnection;
+        }
+
+        public async Task<IEnumerable<Movie>> GetTest()
+        {
+            var query = $"SELECT * FROM [Movies] AS m" +
+                $" INNER JOIN [MovieGenres] AS mg ON m.Id = mg.MoviesId" +
+                $" INNER JOIN [MovieGenre] AS g ON g.Id = mg.GenresId";
+
+            var movies = await _readDbConnection.QueryAsync<Movie>(query);
+
+            return movies;
         }
 
         public async Task<IEnumerable<Movie>> GetAsync(Expression<Func<Movie, bool>> filter = null, Func<IQueryable<Movie>, IOrderedQueryable<Movie>> orderBy = null, string includeProperties = "")
@@ -35,11 +52,12 @@ namespace DataAccess.Repositories
             return movie;
         }
 
-        public async Task<IEnumerable<Movie>> GetPagedMovies(MovieParameters movieParameters)
+        public async Task<IEnumerable<Movie>> GetPagedMovies()
         {
             var movies = await _context.Movies
-                .Where(m => movieParameters.Years.Contains(m.ReleaseDate.ToString()) || movieParameters.Years.Count == 0)
                 .Include(m => m.Genres)
+                .Include(m => m.WatchLaterUsers)
+                .Include(m => m.FavoriteListUsers)
                 .ToListAsync();
 
             return movies;

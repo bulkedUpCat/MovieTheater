@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BLL.Validators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,8 +17,14 @@ namespace BLL.Email
             mail.IsBodyHtml = true;
             mail.Body = emailTemplate.Body;
             mail.Subject = emailTemplate.Subject;
-            mail.From = new MailAddress("youremail@gmail.com");
+            mail.From = new MailAddress("kostathebesttt@gmail.com");
             mail.To.Add(emailTemplate.To);
+            
+            if (emailTemplate.Attachment != null)
+            {
+                mail.Attachments.Add(emailTemplate.Attachment);
+            }
+
             return mail;
         }
 
@@ -26,7 +33,7 @@ namespace BLL.Email
             try
             {
                 MailMessage message = GetMailMessage(emailTemplate);
-                var credentials = new NetworkCredential("youremail@gmail.com", "yourpassword");
+                var credentials = new NetworkCredential("kostathebesttt@gmail.com", "18112003K");
 
                 var client = new SmtpClient()
                 {
@@ -38,12 +45,13 @@ namespace BLL.Email
                     EnableSsl = true
                 };
 
+
                 client.Send(message);
                 return true;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new MovieException("Failed to send an email");
             }
         }
     }

@@ -1,10 +1,13 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Movie } from 'src/app/model/movie';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommentService } from 'src/app/services/comment.service';
 import { MovieService } from 'src/app/services/movie.service';
+import { NavigationService } from 'src/app/services/navigation.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -15,18 +18,20 @@ export class MovieDetailComponent implements OnInit {
   comments: any[];
   commentForm: FormGroup;
   loggedUserId: string;
+  isLoggedIn: boolean;
   userInfo;
   movie: Movie;
   imageUrl: string = '';
   returnUrl: string;
-  imgToShowAndHide;
-  fullSizeImage: boolean;
+  videoSource: string = '';
 
   constructor(private movieService: MovieService,
-    private commentService: CommentService,
+    private notifier: NotifierService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private fb: FormBuilder) { }
+    private router: Router,
+    private fb: FormBuilder,
+    private navigation: Location) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -35,11 +40,18 @@ export class MovieDetailComponent implements OnInit {
     this.movieService.getMovieById(parseInt(id)).subscribe(m => {
       this.movie = m;
       this.imageUrl = 'assets/images/' + this.movie?.image;
-    },err => console.log(err));
-
-
+      this.videoSource = m.trailerUrl;
+      console.log(this.videoSource);
+    },err => {
+      this.notifier.showNotification(err.error, 'Ok', 'error');
+      this.router.navigateByUrl('/movies');
+    });
 
     this.getUserInfo();
+
+    this.authService.isLoggedIn.subscribe( u => {
+      this.isLoggedIn = u;
+    });
 
     this.loggedUserId = this.userInfo.jti;
 
@@ -76,5 +88,9 @@ export class MovieDetailComponent implements OnInit {
       overlay.classList.remove('active');
     })
 
+  }
+
+  goBack(){
+    this.navigation.back();
   }
 }

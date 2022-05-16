@@ -13,7 +13,7 @@ import { UserTableComponent } from '../user-table/user-table.component';
 })
 export class NavbarComponent implements OnInit,AfterViewChecked {
   userLoggedIn: boolean;
-  isAdmin: boolean = true;
+  isAdmin: boolean;
   constructor(private authService: AuthService,
     private changeDetectorRef: ChangeDetectorRef,
     private dialog: MatDialog) { }
@@ -21,6 +21,12 @@ export class NavbarComponent implements OnInit,AfterViewChecked {
   ngOnInit(): void {
     this.authService.isLoggedIn.subscribe(u => {
       this.userLoggedIn = u;
+    })
+
+    this.authService.claims.subscribe(c => {
+      if (c){
+        this.isAdmin = c.includes('Admin');
+      }
     })
   }
 
@@ -30,6 +36,7 @@ export class NavbarComponent implements OnInit,AfterViewChecked {
 
   onLogOut(){
     this.authService.logOut();
+    this.isAdmin = false;
   }
 
   openAddMovie(){

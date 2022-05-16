@@ -34,3 +34,15 @@ export class ChangeEmailDTO{
   userId: string;
   newEmail: string;
 }
+
+export interface ForgotPasswordDTO{
+  email: string;
+  clientURI: string;
+}
+
+export interface ResetPasswordDTO{
+  password: string;
+  confirmPassword: string;
+  email: string;
+  token: string;
+}

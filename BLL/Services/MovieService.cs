@@ -1,29 +1,36 @@
 ﻿using AutoMapper;
-using BLL.Abstractions.Interfaces;
+using BLL.Email;
+using BLL.Validators;
 using Core.DTOs;
 using Core.Helpers;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
-using DataAccess;
-using DataAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using iText.Kernel.Colors;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using Microsoft.AspNetCore.Identity;
+using System.Net.Mail;
 
 namespace BLL.Services
 {
     public class MovieService //: IMovieService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<User> _userManager;
+        private readonly EmailSender _emailSender;
         private readonly IMapper _mapper;
 
         public MovieService(IUnitOfWork unitOfWork,
+            UserManager<User> userManager,
+            EmailSender emailSender,
             IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _emailSender = emailSender;
             _mapper = mapper;
         }
 
@@ -33,15 +40,23 @@ namespace BLL.Services
             return movies;
         }
 
-        public async Task<PagedList<Movie>> GetPagedMoviesAsync(MovieParameters movieParameters)
+        public async Task<PagedList<MovieDTO>> GetPagedMoviesAsync(MovieParameters movieParameters)
         {
-            var movies = await _unitOfWork.MovieRepository.GetPagedMovies(movieParameters);
-            if (movies == null) throw new Exception("Movies not found!");
+            var movies = await _unitOfWork.MovieRepository.GetPagedMovies();
+            var user = await _userManager.FindByEmailAsync(movieParameters.UserEmail);
 
-            List<Movie> newMovies = new List<Movie>();
+            if (user == null)
+            {
+                throw new MovieException("The user with this email doesn't exist");
+            }
+
+            var moviesDTO = _mapper.Map<IEnumerable<MovieDTO>>(movies);
+            var userDTO = _mapper.Map<UserDTO>(user);
+
+            List<MovieDTO> newMovies = new List<MovieDTO>();
             int count;
 
-            foreach (var movie in movies)
+            foreach (var movie in moviesDTO)
             {
                 count = 0;
 
@@ -60,8 +75,26 @@ namespace BLL.Services
                 }
             }
 
-            var pagedList = PagedList<Movie>.ToPagedList(newMovies, movieParameters.PageNumber, movieParameters.PageSize);
+            newMovies = newMovies
+                .Where(m => movieParameters.Years.Contains(m.ReleaseDate.ToString()) || movieParameters.Years.Count == 0)
+                .OrderByDescending(m => m.ReleaseDate)
+                .ToList();
 
+            if (movieParameters.WatchLater)
+            {
+                newMovies = newMovies.Where(m => m.WatchLaterUsers.Any(u => u.Id == userDTO.Id)).ToList();
+            }
+            else if (movieParameters.FavoriteList)
+            {
+                newMovies = newMovies.Where(m => m.FavoriteListUsers.Any(u => u.Id == userDTO.Id)).ToList();
+            }
+
+            if (movieParameters.PageSize == 0)
+            {
+                movieParameters.PageSize = newMovies.Count;
+            }
+
+            var pagedList = PagedList<MovieDTO>.ToPagedList(newMovies, movieParameters.PageNumber, movieParameters.PageSize);
 
             return pagedList;
         }
@@ -69,12 +102,18 @@ namespace BLL.Services
         public async Task<Movie> GetMovieById(int id)
         {
             var movie = await _unitOfWork.MovieRepository.GetByIdAsync(id);
+
+            if (movie == null)
+            {
+                throw new MovieException("Movie doesn't exist");
+            }
+
             return movie;
         }
 
         public async Task<bool> AddMovieAsync(MovieDTO movieDTO)
         {
-            if (movieDTO == null)
+            /*if (movieDTO == null)
             {
                 return false;
             }
@@ -89,9 +128,10 @@ namespace BLL.Services
                 Image = $"{string.Join("",movieDTO.Title.Split(" "))}.jpg"
             };
 
-            var genres = await _unitOfWork.MovieGenreRepository.GetAsync(mg => movieDTO.Genres.Contains(mg.Name));
+            // this should be checked
+            //var genres = await _unitOfWork.MovieGenreRepository.GetAsync(mg => movieDTO.Genres.Contains(mg.Name));
 
-            movie.Genres = (ICollection<MovieGenre>) genres;
+            //movie.Genres = (ICollection<MovieGenre>) genres;
 
             try
             {
@@ -121,7 +161,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 return false;
-            }
+            }*/
             
             return true;
         }
@@ -141,6 +181,63 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> CreateReport(MovieParameters movieParameters)
+        {
+            var movies = await GetPagedMoviesAsync(movieParameters);
+
+            if (movies == null)
+            {
+                throw new MovieException("Movies not found");
+            }
+
+            var stream = new MemoryStream();
+            var writer = new PdfWriter(stream);
+            var pdf = new PdfDocument(writer);
+            var document = new Document(pdf);
+
+            float[] pointColumnWidths = { 300F, 100F, 100F };
+
+            Table table = new Table(pointColumnWidths);
+            table.AddCell(new Cell().Add(new Paragraph("Title").SetFontColor(ColorConstants.RED)));
+            table.AddCell(new Cell().Add(new Paragraph("Year").SetFontColor(ColorConstants.RED)));
+            table.AddCell(new Cell().Add(new Paragraph("Runtime (hours)").SetFontColor(ColorConstants.RED)));
+
+            foreach(var movie in movies)
+            {
+                table.AddCell(new Cell().Add(new Paragraph(movie.Title)));
+                table.AddCell(new Cell().Add(new Paragraph(movie.ReleaseDate.ToString())));
+                table.AddCell(new Cell().Add(new Paragraph(movie.RuntimeHours.ToString())));
+            }
+
+            document.Add(table);
+
+            document.Close();
+            MemoryStream pdfStream = new MemoryStream(stream.ToArray());
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = movieParameters.UserEmail,
+                    Subject = "Movie Report",
+                    Body = "Here is you pdf report",
+                    Attachment = new Attachment(pdfStream, "report.pdf")
+                });
+            }
+            catch (Exception e)
+            {
+                throw new MovieException(e.Message);
+            }
+            finally
+            {
+                stream.Close();
+                pdfStream.Close();
+                writer.Close();
             }
 
             return true;

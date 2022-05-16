@@ -21,18 +21,12 @@ namespace MovieTheaterApi.Controllers
     {
         private readonly UserService _userService;
         private readonly UserManager<User> _userManager;
-        private readonly JwtHandler _jwtHandler;
-        private readonly IConfigurationRoot _configuration;
 
         public UserController(UserService userService,
-            UserManager<User> userManager,
-            JwtHandler jwtHandler,
-            IConfigurationRoot configuration)
+            UserManager<User> userManager)
         {
             _userService = userService;
             _userManager = userManager;
-            _jwtHandler = jwtHandler;
-            _configuration = configuration;
         }
 
         [HttpGet]

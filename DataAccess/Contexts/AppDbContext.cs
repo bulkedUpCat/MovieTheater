@@ -1,8 +1,11 @@
 ﻿using Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,5 +40,7 @@ namespace DataAccess.Contexts
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<MovieGenre> MovieGenre { get; set; }
+        public IDbConnection Connection { get; set; } 
+            = new SqlConnection("Data Source=DESKTOP-LA5RDNV;Database=MovieTheaterDB2;Trusted_connection=true");
     }
 }

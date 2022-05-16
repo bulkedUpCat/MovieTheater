@@ -1,0 +1,7 @@
+<app-spinner-overlay *ngIf="!loaded"></app-spinner-overlay>
+
+<p>Do you want to receive a table of the chosen movies on your email?</p>
+<div class="buttons">
+    <button (click)="createReport()">YES</button>
+    <button (click)="dialogRef.close()">NO</button>
+</div>

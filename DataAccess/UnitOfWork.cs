@@ -1,6 +1,7 @@
 ﻿using Core.Models;
 using DAL.Abstractions.Interfaces;
 using DataAccess.Contexts;
+using DataAccess.Dapper;
 using DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,16 @@ namespace DataAccess
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
+        private readonly AppReadDbConnection _readDbConnection;
         private IUserRepository _userRepo;
         private IMovieRepository _movieRepo;
         private ICommentRepository _commentRepo;
         private IMovieGenreRepository _movieGenreRepo;
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(AppDbContext context,
+            AppReadDbConnection readDbConnection)
         {
             _context = context;
+            _readDbConnection = readDbConnection;
         }
 
         public IUserRepository UserRepository {
@@ -40,7 +44,7 @@ namespace DataAccess
             {
                 if (_movieRepo == null)
                 {
-                    _movieRepo = new MovieRepository(_context);
+                    _movieRepo = new MovieRepository(_context,_readDbConnection);
                 }
 
                 return _movieRepo;

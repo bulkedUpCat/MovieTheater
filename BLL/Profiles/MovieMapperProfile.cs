@@ -13,9 +13,11 @@ namespace BLL.Profiles
     {
         public MovieMapperProfile()
         {
-            CreateMap<MovieDTO, Movie>()
-                .ForMember(m => m.Image, src => src.MapFrom(x => x.Title + ".jpg"))
-                .ForMember(m => m.ReleaseDate, src => src.MapFrom(x => x.Year));
+            CreateMap<MovieGenre, MovieGenreDTO>()
+                .ForMember(mg => mg.Name, src => src.MapFrom(x => x.Name))
+                .ForMember(mg => mg.Id, src => src.MapFrom(x => x.Id));
+
+            CreateMap<Movie, MovieDTO>();
         }
     }
 }

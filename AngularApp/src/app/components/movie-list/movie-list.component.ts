@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilterModel } from 'src/app/model/filters';
 import { Movie } from 'src/app/model/movie';
 import { MovieParameters } from 'src/app/model/movieParameters';
 import { AuthService } from 'src/app/services/auth.service';
 import { MovieService } from 'src/app/services/movie.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
+import { CreateReportComponent } from '../create-report/create-report.component';
 
 @Component({
   selector: 'app-movie-list',
@@ -12,7 +14,9 @@ import { SharedParamsService } from 'src/app/services/shared-params.service';
   styleUrls: ['./movie-list.component.css']
 })
 export class MovieListComponent implements OnInit {
-
+  @Input() watchLater: boolean = false;
+  @Input() favoriteList: boolean = this.sharedParamsService.favoriteList;
+  userInfo;
   movies: Array<Movie> = [];
   filteredMovies: Array<Movie> = [];
   movieParameters: MovieParameters = new MovieParameters();
@@ -20,11 +24,12 @@ export class MovieListComponent implements OnInit {
 
   constructor(private movieService: MovieService,
     private authService: AuthService,
+    private dialog: MatDialog,
     public sharedParamsService: SharedParamsService) { }
 
   ngOnInit(): void {
+    this.getUserInfo();
     this.configureMovieParameters();
-    console.log(this.sharedParamsService.pageNumber);
 
     this.movieService.getMovies(this.movieParameters).subscribe(
       movies => {
@@ -33,14 +38,28 @@ export class MovieListComponent implements OnInit {
       },
       err => console.log(err),
       () => console.log('all movies displayed'));
-      this.authService.getUserInfo();
+  }
+
+  getUserInfo(){
+    this.authService.getUserInfo().subscribe(u => {
+      this.userInfo = u;
+      this.sharedParamsService.userEmail = u.email;
+    })
   }
 
   configureMovieParameters(){
-    this.movieParameters.pageSize = 12;
-    this.movieParameters.pageNumber = this.sharedParamsService.pageNumber;
-    this.movieParameters.genres = this.sharedParamsService.genres;
-    this.movieParameters.years = this.sharedParamsService.years;
+    this.sharedParamsService.watchLater = this.watchLater;
+    this.sharedParamsService.favoriteList = this.favoriteList;
+
+    this.movieParameters = {
+      pageSize: 12,
+      pageNumber: this.sharedParamsService.pageNumber,
+      genres: this.sharedParamsService.genres,
+      years: this.sharedParamsService.years,
+      userEmail: this.sharedParamsService.userEmail,
+      watchLater: this.sharedParamsService.watchLater,
+      favoriteList: this.sharedParamsService.favoriteList
+    }
   }
 
   filterMovies(filterModel: FilterModel){
@@ -75,6 +94,19 @@ export class MovieListComponent implements OnInit {
       console.log(err);
     })
   }
+
+  createReport(){
+    this.movieParameters.pageSize = 0;
+    this.dialog.open(CreateReportComponent, {
+      data: {
+        params: this.movieParameters
+      }
+    });
+
+    // this.movieService.createReport(this.movieParameters).subscribe(m => {
+    //   console.log('report sent');
+    // })
+
+    this.movieParameters.pageSize = this.sharedParamsService.pageSize;
+  }
 }
-
-

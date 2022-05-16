@@ -12,12 +12,12 @@
       <a routerLink="home" routerLinkActive="active">Home page</a>
     </span>
     <span *ngIf="userLoggedIn">
-      <a routerLink="logout" routerLinkActive="active">Log out</a>
+      <a (click)="onLogOut()">Log out</a>
     </span>
-    <span *ngIf="isAdmin">
+    <span *ngIf="userLoggedIn && isAdmin">
       <a (click)="openAddMovie()">Add movie</a>
     </span>
-    <span *ngIf="isAdmin">
+    <!-- <span *ngIf="isAdmin">
       <a routerLink="user-table" routerLinkActive="active">User table</a>
-    </span>
+    </span> -->
 </div>

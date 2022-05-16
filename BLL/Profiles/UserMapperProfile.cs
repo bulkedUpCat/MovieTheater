@@ -15,6 +15,8 @@ namespace BLL.Profiles
         {
             CreateMap<User, UserLoginDTO>().ReverseMap();
             CreateMap<User, UserRegisterDTO>().ReverseMap();
+
+            CreateMap<User, UserDTO>();
         }
     }
 }

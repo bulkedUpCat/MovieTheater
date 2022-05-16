@@ -10,6 +10,7 @@ namespace DAL.Abstractions.Interfaces
 {
     public interface IMovieRepository : IGenericRepository<Movie>
     {
-        Task<IEnumerable<Movie>> GetPagedMovies(MovieParameters movieParameters);
+        Task<IEnumerable<Movie>> GetPagedMovies();
+        Task<IEnumerable<Movie>> GetTest();
     }
 }

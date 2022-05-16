@@ -29,7 +29,6 @@ import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-ov
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './modules/material/material.module';
 import { SpinnerService } from './services/spinner.service';
-import { SpinnerInterceptor } from './interceptors/spinner-interceptor';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NotifierService } from './services/notifier.service';
 import { NotifierComponent } from './components/notifier/notifier.component';
@@ -37,6 +36,12 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { AddMovieComponent } from './components/add-movie/add-movie.component';
 import { UserTableComponent } from './components/user-table/user-table.component';
 import { SharedParamsService } from './services/shared-params.service';
+import { VideoComponent } from './components/video/video.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { WatchLaterMoviesComponent } from './components/watch-later-movies/watch-later-movies.component';
+import { CreateReportComponent } from './components/create-report/create-report.component';
+import { FavoriteListComponent } from './components/favorite-list/favorite-list.component';
 
 export function tokenGetter() {
   return localStorage.getItem("TokenInfo");
@@ -61,7 +66,13 @@ export function tokenGetter() {
     NotifierComponent,
     DialogComponent,
     AddMovieComponent,
-    UserTableComponent
+    UserTableComponent,
+    VideoComponent,
+    PasswordResetComponent,
+    ForgotPasswordComponent,
+    WatchLaterMoviesComponent,
+    CreateReportComponent,
+    FavoriteListComponent
   ],
   imports: [
     BrowserModule,
@@ -93,7 +104,7 @@ export function tokenGetter() {
     AuthGuard,
     // {
     //   provide: HTTP_INTERCEPTORS,
-    //   useClass: SpinnerInterceptor,
+    //   useClass: ErrorCatchingInterceptor,
     //   multi: true,
     // }
   ],

@@ -7,7 +7,7 @@
             <div class="listing">
                 <button *ngFor="let genre of genres" (click)="onSortByGenre(genre)" [ngClass]="{option: !checkIfGenreIsChosen(genre),
                                 chosenOption: checkIfGenreIsChosen(genre)}">
-              {{genre}}
+              {{genre.name}}
             </button>
             </div>
         </div>
@@ -22,8 +22,9 @@
         </div>
         <button class="main-option" (click)="showRuntime = !showRuntime">Runtime</button>
         <div *ngIf="showRuntime">
-            <button class="option" *ngFor="let runtime of runtimes">
-        <span>< {{runtime}}</span>
+            <button *ngFor="let r of runtime" (click)="onSortByRuntime(r)" [ngClass]="{option: !checkIfRuntimeIsChosen(r),
+                    chosenOption: checkIfRuntimeIsChosen(r)}">
+        <span> {{r}}</span>
       </button>
         </div>
     </div>

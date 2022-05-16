@@ -1,41 +1,4 @@
-<div class="personal-info">
-    <div>
-        <p>Username:</p>
-        <p>{{userInfo.sub}}</p>
-        <button class="username-open-btn">Change username</button>
-    </div>
-    <div>
-        <p>Email:</p>
-        <p>{{userInfo.email}}</p>
-        <button mat-raised-button (click)="openDialog()">Open</button>
-    </div>
+<div class="links">
+    <a routerLink="/home/watch-later" routerLinkActive="active">Watch Later Movies</a>
+    <a routerLink="/home/favorite-list" routerLinkActive="active">Favorite Movies</a>
 </div>
-<div id="username-popup">
-    <div class="popup-header">
-        <p>Enter new username</p>
-        <button class="username-close-btn">&times;</button>
-    </div>
-    <form (ngSubmit)="onChangeUsername()" [formGroup]="changeUsername">
-        <input type="text" formControlName="newUsername" />
-        <button type="submit">Submit</button>
-    </form>
-</div>
-
-<button class="list-btn" (click)="onAddToFavorite()"><h1>Favorite Movies</h1></button>
-
-<div class="grid-container" *ngIf="favorite">
-    <div class="favorite" *ngFor="let movie of favoriteMovies">
-        <app-movie [movie]="movie"></app-movie>
-    </div>
-</div>
-
-
-<button class="list-btn" (click)="onWatchLater()"><h1>Watch Later</h1></button>
-
-<div class="grid-container" *ngIf="watchLater">
-    <div class="watch-later" *ngFor="let movie of watchLaterMovies">
-        <app-movie [movie]="movie"></app-movie>
-    </div>
-</div>
-
-<div id="overlay"></div>

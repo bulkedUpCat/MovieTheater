@@ -3,4 +3,7 @@ export class MovieParameters{
   pageSize:number;
   genres: Array<string>;
   years: Array<number>;
+  userEmail: string;
+  watchLater: boolean;
+  favoriteList: boolean;
 }

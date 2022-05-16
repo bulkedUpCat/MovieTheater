@@ -1,6 +1,8 @@
 ﻿using Core.Models;
 using DAL.Abstractions.Interfaces;
+using Dapper;
 using DataAccess.Contexts;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,12 @@ namespace DataAccess.Repositories
     public class CommentRepository : ICommentRepository
     {
         private readonly AppDbContext _context;
+        private readonly string _connectionString;
 
         public CommentRepository(AppDbContext context)
         {
             _context = context;
+            _connectionString = "Data Source=DESKTOP-LA5RDNV;Database=MovieTheaterDB2;Trusted_connection=true";
         }
 
         public async Task<IEnumerable<Comment>> GetAsync(
@@ -51,7 +55,13 @@ namespace DataAccess.Repositories
 
         public async Task<Comment> GetByIdAsync(object id)
         {
-            return await _context.Comments.FindAsync(id);
+            //return await _context.Comments.FindAsync(id);
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = "SELECT * FROM [Comments]";
+                var comment = await connection.QuerySingleAsync<Comment>(query);
+                return comment;
+            }
         }
 
         public async Task<IEnumerable<Comment>> GetByMovieIdAsync(int id)

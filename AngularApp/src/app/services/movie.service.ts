@@ -21,7 +21,10 @@ export class MovieService {
         pageNumber: movieParameters.pageNumber,
         pageSize: movieParameters.pageSize,
         genres: movieParameters.genres,
-        years: movieParameters.years
+        years: movieParameters.years,
+        userEmail: movieParameters.userEmail,
+        watchLater: movieParameters.watchLater,
+        favoriteList: movieParameters.favoriteList
       }
     });
   }
@@ -90,6 +93,18 @@ export class MovieService {
     this.movieUser.movieId = movieId;
 
     return this.http.delete(`${environment.apiUrl}/FavoriteList`, {body: this.movieUser});
+  }
+
+  // Emails
+
+  createReport(movieParameters: MovieParameters){
+    const headers = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+
+    return this.http.post(`${environment.apiUrl}/Movie/report`,movieParameters,headers);
   }
 
 }

@@ -1,7 +1,6 @@
 <img id="img-popup" [src]="imageUrl">
 
-
-<a routerLink="/movies" routerLinkActive="active">Go back</a>
+<button (click)="goBack()">Go back</button>
 <h4>{{movie?.title}} ({{movie?.releaseDate}})</h4>
 <div class="grid-container">
     <div id="grid-item-image" class="grid-item-image">
@@ -42,7 +41,9 @@
     <p>{{movie?.description}}</p>
 </div>
 
-<app-list-buttons [movie]="movie" [loggedUserId]="loggedUserId" *ngIf="movie && loggedUserId"></app-list-buttons>
+<app-video *ngIf="videoSource" [videoSource]="videoSource"></app-video>
+
+<app-list-buttons [movie]="movie" [loggedUserId]="loggedUserId" *ngIf="movie && isLoggedIn"></app-list-buttons>
 
 <app-comment [loggedUserId]="loggedUserId" [movie]="movie"></app-comment>
 

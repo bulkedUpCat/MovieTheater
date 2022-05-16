@@ -7,6 +7,7 @@ export interface Movie {
   description: string;
   director: string;
   runtimeHours: number;
+  trailerUrl: string;
 }
 
 export interface MovieDTO{

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Enums
+namespace Core.DTOs
 {
-    public enum SortingOptions
+    public class MovieGenreDTO
     {
-        Year,
-        Genre
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

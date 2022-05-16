@@ -1,10 +1,12 @@
 using AutoMapper;
+using BLL.Email;
 using BLL.Profiles;
 using BLL.Services;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
 using DataAccess;
 using DataAccess.Contexts;
+using DataAccess.Dapper;
 using DataAccess.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +40,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Dapper
+builder.Services.AddScoped<AppReadDbConnection>();
+builder.Services.AddScoped<AppWriteDbConnection>();
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     //options.SignIn.RequireConfirmedEmail = true;
@@ -61,6 +67,8 @@ builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<CommentService>();
 builder.Services.AddTransient<WatchLaterListService>();
 builder.Services.AddTransient<FavoriteListService>();
+builder.Services.AddTransient<MovieGenreService>();
+builder.Services.AddTransient<EmailSender>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
     AddJwtBearer(options =>
