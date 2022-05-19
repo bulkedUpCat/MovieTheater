@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotifierService } from 'src/app/services/notifier.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
-import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from '../dialogs/forgot-password/forgot-password.component';
 
 
 @Component({

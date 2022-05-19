@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +12,7 @@ export class SharedParamsService {
   genres: Array<string> = new Array<string>();
   years: Array<number> = new Array<number>();
   runtime: Array<string> = new Array<string>();
+  searchString: string = '';
   showSortingOptions: boolean;
   showGenres: boolean;
   showYears: boolean;

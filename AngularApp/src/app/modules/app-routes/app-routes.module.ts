@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddMovieComponent } from 'src/app/components/add-movie/add-movie.component';
 import { FavoriteListComponent } from 'src/app/components/favorite-list/favorite-list.component';
-import { ForgotPasswordComponent } from 'src/app/components/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from 'src/app/components/dialogs/forgot-password/forgot-password.component';
 import { HomeComponent } from 'src/app/components/home/home.component';
 import { MovieDetailComponent } from 'src/app/components/movie-detail/movie-detail.component';
 import { MovieListComponent } from 'src/app/components/movie-list/movie-list.component';
@@ -24,7 +23,6 @@ const appRoutes : Routes = [
   {path: 'reset-password', component: PasswordResetComponent},
   {path: 'movies', component: MovieListComponent},
   {path:'movie-detail/:id', component: MovieDetailComponent},
-  {path: 'add-movie', component: AddMovieComponent, canActivate: [AuthGuard]},
   {path: 'user-table', component: UserTableComponent, canActivate: [AuthGuard]},
   {path:'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'home/watch-later', component: WatchLaterMoviesComponent, canActivate: [AuthGuard]},

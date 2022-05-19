@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PasswordResetComponent } from '../components/password-reset/password-reset.component';
 import { ForgotPasswordDTO, ResetPasswordDTO, User, UserLogin, UserSignUp } from '../model/user';
 
 @Injectable({
@@ -24,6 +23,7 @@ export class AuthService {
 
     if (token && this.jwtHelper.isTokenExpired(token)){
       this.loggedIn.next(false);
+      this.claims.next([]);
     }
 
     return this.loggedIn.asObservable();
@@ -48,6 +48,7 @@ export class AuthService {
   logOut(){
     this.loggedIn.next(false);
     localStorage.removeItem("TokenInfo");
+    this.claims.next([]);
     this.router.navigate(['/login']);
   }
 
@@ -65,7 +66,7 @@ export class AuthService {
     const token = localStorage.getItem('TokenInfo');
     let payload;
 
-    if (token){
+    if (token && !this.jwtHelper.isTokenExpired(token)){
       payload = token.split('.')[1];
       payload = window.atob(payload);
       payload = JSON.parse(payload);

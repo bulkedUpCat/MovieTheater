@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MovieTheaterApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/movies")]
     [ApiController]
     public class MovieController : ControllerBase
     {
@@ -98,6 +98,7 @@ namespace MovieTheaterApi.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+
         }
     }
 }

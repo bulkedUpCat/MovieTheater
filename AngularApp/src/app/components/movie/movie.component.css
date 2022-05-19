@@ -6,6 +6,20 @@ a {
     text-decoration: none;
 }
 
+.item>div {
+    position: relative;
+}
+
+.item>div>span {
+    color: rgb(253, 4, 4);
+    position: absolute;
+    font-weight: bold;
+    font-size: 2em;
+    top: -25px;
+    right: -10px;
+    cursor: pointer;
+}
+
 @media screen and (min-width: 601px) {
     h4 {
         font-size: 1.5vw;

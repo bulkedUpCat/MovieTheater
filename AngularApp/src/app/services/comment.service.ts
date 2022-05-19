@@ -11,11 +11,11 @@ export class CommentService {
   constructor(private http: HttpClient) { }
 
   getAllComments() : Observable<Comment[]>{
-    return this.http.get<Comment[]>(`${environment.apiUrl}/Comment`);
+    return this.http.get<Comment[]>(`${environment.apiUrl}/comments`);
   }
 
   getCommentsByMovieId(id: number): Observable<Comment[]>{
-    return this.http.get<Comment[]>(`${environment.apiUrl}/Comment/` + id);
+    return this.http.get<Comment[]>(`${environment.apiUrl}/comments/movies/` + id);
   }
 
   addComment(comment: Comment){
@@ -25,6 +25,6 @@ export class CommentService {
       })
     };
 
-    return this.http.post<Comment>(`${environment.apiUrl}/Comment`,comment, headers);
+    return this.http.post<Comment>(`${environment.apiUrl}/comments`,comment, headers);
   }
 }

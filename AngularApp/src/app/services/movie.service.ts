@@ -16,7 +16,7 @@ export class MovieService {
 
   getMovies(movieParameters: MovieParameters) : Observable<Movie[]>{
 
-    return this.http.get<Movie[]>(`${environment.apiUrl}/Movie`,{
+    return this.http.get<Movie[]>(`${environment.apiUrl}/movies`,{
       params: {
         pageNumber: movieParameters.pageNumber,
         pageSize: movieParameters.pageSize,
@@ -24,13 +24,14 @@ export class MovieService {
         years: movieParameters.years,
         userEmail: movieParameters.userEmail,
         watchLater: movieParameters.watchLater,
-        favoriteList: movieParameters.favoriteList
+        favoriteList: movieParameters.favoriteList,
+        searchString: movieParameters.searchString
       }
     });
   }
 
   getMovieById(id: number) : Observable<Movie>{
-    return this.http.get<Movie>(`${environment.apiUrl}/Movie/` + id);
+    return this.http.get<Movie>(`${environment.apiUrl}/movies/` + id);
   }
 
   addMovie(movie: MovieDTO){
@@ -40,7 +41,11 @@ export class MovieService {
       })
     };
 
-    return this.http.post<Movie>(`${environment.apiUrl}/Movie`,movie,headers)
+    return this.http.post<Movie>(`${environment.apiUrl}/movies`,movie,headers)
+  }
+
+  deleteMovie(id: number){
+    return this.http.delete(`${environment.apiUrl}/movies/` + id);
   }
 
   // Watch Later List
@@ -104,7 +109,7 @@ export class MovieService {
       })
     };
 
-    return this.http.post(`${environment.apiUrl}/Movie/report`,movieParameters,headers);
+    return this.http.post(`${environment.apiUrl}/movies/report`,movieParameters,headers);
   }
 
 }

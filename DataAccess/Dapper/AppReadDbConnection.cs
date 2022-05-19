@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Dapper
 {
-    public class AppReadDbConnection : IDisposable
+    public class AppReadDbConnection
     {
         private readonly IDbConnection connection;
         public AppReadDbConnection(IConfigurationRoot configuration)

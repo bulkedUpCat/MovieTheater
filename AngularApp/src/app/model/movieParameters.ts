@@ -6,4 +6,5 @@ export class MovieParameters{
   userEmail: string;
   watchLater: boolean;
   favoriteList: boolean;
+  searchString: string;
 }

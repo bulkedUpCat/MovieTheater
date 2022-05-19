@@ -2,6 +2,7 @@
 using DAL.Abstractions.Interfaces;
 using Dapper;
 using DataAccess.Contexts;
+using DataAccess.Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,12 +17,16 @@ namespace DataAccess.Repositories
     public class CommentRepository : ICommentRepository
     {
         private readonly AppDbContext _context;
-        private readonly string _connectionString;
+        private readonly AppReadDbConnection _readDbConnection;
+        private readonly AppWriteDbConnection _writeDbConnection;
 
-        public CommentRepository(AppDbContext context)
+        public CommentRepository(AppDbContext context,
+            AppReadDbConnection readDbConnection,
+            AppWriteDbConnection writeDbConnection)
         {
             _context = context;
-            _connectionString = "Data Source=DESKTOP-LA5RDNV;Database=MovieTheaterDB2;Trusted_connection=true";
+            _readDbConnection = readDbConnection;
+            _writeDbConnection = writeDbConnection;
         }
 
         public async Task<IEnumerable<Comment>> GetAsync(
@@ -55,18 +60,18 @@ namespace DataAccess.Repositories
 
         public async Task<Comment> GetByIdAsync(object id)
         {
-            //return await _context.Comments.FindAsync(id);
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var query = "SELECT * FROM [Comments]";
-                var comment = await connection.QuerySingleAsync<Comment>(query);
-                return comment;
-            }
+            return await _context.Comments.FindAsync(id);
         }
 
         public async Task<IEnumerable<Comment>> GetByMovieIdAsync(int id)
         {
-            return _context.Comments.Where(c => c.MovieId == id);
+            //return _context.Comments.Where(c => c.MovieId == id);
+            var parameters = new { Id = id };
+            var query = $"SELECT * FROM [Comments] WHERE [MovieId] = @Id";
+
+            var comments = await _readDbConnection.QueryAsync<Comment>(query, parameters);
+
+            return comments;
         }
 
         public async Task InsertAsync(Comment entity)

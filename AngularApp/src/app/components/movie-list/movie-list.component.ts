@@ -1,3 +1,5 @@
+import { Location } from '@angular/common';
+import { ThisReceiver } from '@angular/compiler';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FilterModel } from 'src/app/model/filters';
@@ -6,7 +8,7 @@ import { MovieParameters } from 'src/app/model/movieParameters';
 import { AuthService } from 'src/app/services/auth.service';
 import { MovieService } from 'src/app/services/movie.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
-import { CreateReportComponent } from '../create-report/create-report.component';
+import { CreateReportComponent } from '../dialogs/create-report/create-report.component';
 
 @Component({
   selector: 'app-movie-list',
@@ -17,23 +19,23 @@ export class MovieListComponent implements OnInit {
   @Input() watchLater: boolean = false;
   @Input() favoriteList: boolean = this.sharedParamsService.favoriteList;
   userInfo;
-  movies: Array<Movie> = [];
   filteredMovies: Array<Movie> = [];
   movieParameters: MovieParameters = new MovieParameters();
-  searchText: string;
+  searchString: string;
 
   constructor(private movieService: MovieService,
     private authService: AuthService,
     private dialog: MatDialog,
-    public sharedParamsService: SharedParamsService) { }
+    public sharedParamsService: SharedParamsService,
+    private location: Location) { }
 
   ngOnInit(): void {
     this.getUserInfo();
     this.configureMovieParameters();
+    this.searchString = this.sharedParamsService.searchString;
 
     this.movieService.getMovies(this.movieParameters).subscribe(
       movies => {
-        this.movies = movies;
         this.filteredMovies = movies;
       },
       err => console.log(err),
@@ -58,7 +60,8 @@ export class MovieListComponent implements OnInit {
       years: this.sharedParamsService.years,
       userEmail: this.sharedParamsService.userEmail,
       watchLater: this.sharedParamsService.watchLater,
-      favoriteList: this.sharedParamsService.favoriteList
+      favoriteList: this.sharedParamsService.favoriteList,
+      searchString: this.sharedParamsService.searchString
     }
   }
 
@@ -103,10 +106,19 @@ export class MovieListComponent implements OnInit {
       }
     });
 
-    // this.movieService.createReport(this.movieParameters).subscribe(m => {
-    //   console.log('report sent');
-    // })
-
     this.movieParameters.pageSize = this.sharedParamsService.pageSize;
+  }
+
+  onSearch(){
+    this.movieParameters.searchString = this.searchString;
+    this.sharedParamsService.searchString = this.searchString;
+
+    this.movieService.getMovies(this.movieParameters).subscribe( m => {
+      this.filteredMovies = m;
+    })
+  }
+
+  goHome(){
+    this.location.back();
   }
 }

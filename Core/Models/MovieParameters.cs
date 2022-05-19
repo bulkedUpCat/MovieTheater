@@ -28,5 +28,6 @@ namespace Core.Models
         public bool WatchLater { get; set; }
         public bool FavoriteList { get; set; }
         public string UserEmail { get; set; }
+        public string? SearchString { get; set; }
     }
 }

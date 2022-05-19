@@ -3,7 +3,7 @@ import { AfterViewChecked, ChangeDetectorRef, Component, OnInit } from '@angular
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { AddMovieComponent } from '../add-movie/add-movie.component';
+import { AddMovieComponent } from '../dialogs/add-movie/add-movie.component';
 import { UserTableComponent } from '../user-table/user-table.component';
 
 @Component({

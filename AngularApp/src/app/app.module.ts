@@ -32,16 +32,17 @@ import { SpinnerService } from './services/spinner.service';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NotifierService } from './services/notifier.service';
 import { NotifierComponent } from './components/notifier/notifier.component';
-import { DialogComponent } from './components/dialog/dialog.component';
-import { AddMovieComponent } from './components/add-movie/add-movie.component';
+import { DialogComponent } from './components/dialogs/dialog/dialog.component';
+import { AddMovieComponent } from './components/dialogs/add-movie/add-movie.component';
 import { UserTableComponent } from './components/user-table/user-table.component';
 import { SharedParamsService } from './services/shared-params.service';
 import { VideoComponent } from './components/video/video.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './components/dialogs/forgot-password/forgot-password.component';
 import { WatchLaterMoviesComponent } from './components/watch-later-movies/watch-later-movies.component';
-import { CreateReportComponent } from './components/create-report/create-report.component';
+import { CreateReportComponent } from './components/dialogs/create-report/create-report.component';
 import { FavoriteListComponent } from './components/favorite-list/favorite-list.component';
+import { DeleteMovieComponent } from './components/dialogs/delete-movie/delete-movie.component';
 
 export function tokenGetter() {
   return localStorage.getItem("TokenInfo");
@@ -72,7 +73,8 @@ export function tokenGetter() {
     ForgotPasswordComponent,
     WatchLaterMoviesComponent,
     CreateReportComponent,
-    FavoriteListComponent
+    FavoriteListComponent,
+    DeleteMovieComponent
   ],
   imports: [
     BrowserModule,

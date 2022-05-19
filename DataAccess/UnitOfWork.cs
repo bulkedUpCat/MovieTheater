@@ -15,15 +15,18 @@ namespace DataAccess
     {
         private readonly AppDbContext _context;
         private readonly AppReadDbConnection _readDbConnection;
+        private readonly AppWriteDbConnection _writeDbConnection;
         private IUserRepository _userRepo;
         private IMovieRepository _movieRepo;
         private ICommentRepository _commentRepo;
         private IMovieGenreRepository _movieGenreRepo;
         public UnitOfWork(AppDbContext context,
-            AppReadDbConnection readDbConnection)
+            AppReadDbConnection readDbConnection,
+            AppWriteDbConnection writeDbConnection)
         {
             _context = context;
             _readDbConnection = readDbConnection;
+            _writeDbConnection = writeDbConnection;
         }
 
         public IUserRepository UserRepository {
@@ -56,7 +59,7 @@ namespace DataAccess
             {
                 if (_commentRepo == null)
                 {
-                    _commentRepo = new CommentRepository(_context);
+                    _commentRepo = new CommentRepository(_context, _readDbConnection, _writeDbConnection);
                 }
 
                 return _commentRepo;

@@ -41,11 +41,12 @@ namespace BLL.Services
         }
 
         public async Task<PagedList<MovieDTO>> GetPagedMoviesAsync(MovieParameters movieParameters)
-        {
+       {
             var movies = await _unitOfWork.MovieRepository.GetPagedMovies();
+
             var user = await _userManager.FindByEmailAsync(movieParameters.UserEmail);
 
-            if (user == null)
+            if (user == null && string.IsNullOrEmpty(movieParameters.UserEmail))
             {
                 throw new MovieException("The user with this email doesn't exist");
             }
@@ -69,7 +70,7 @@ namespace BLL.Services
                     }
                 }
 
-                if (count >= movieParameters.Genres.Count)
+                if (count == movieParameters.Genres.Count)
                 {
                     newMovies.Add(movie);
                 }
@@ -80,13 +81,18 @@ namespace BLL.Services
                 .OrderByDescending(m => m.ReleaseDate)
                 .ToList();
 
-            if (movieParameters.WatchLater)
+            if (movieParameters.WatchLater && !string.IsNullOrEmpty(movieParameters.UserEmail))
             {
                 newMovies = newMovies.Where(m => m.WatchLaterUsers.Any(u => u.Id == userDTO.Id)).ToList();
             }
-            else if (movieParameters.FavoriteList)
+            else if (movieParameters.FavoriteList && !string.IsNullOrEmpty(movieParameters.UserEmail))
             {
                 newMovies = newMovies.Where(m => m.FavoriteListUsers.Any(u => u.Id == userDTO.Id)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(movieParameters.SearchString))
+            {
+                newMovies = newMovies.Where(m => m.Title.Contains(movieParameters.SearchString.ToUpper())).ToList();
             }
 
             if (movieParameters.PageSize == 0)
@@ -113,7 +119,7 @@ namespace BLL.Services
 
         public async Task<bool> AddMovieAsync(MovieDTO movieDTO)
         {
-            /*if (movieDTO == null)
+            if (movieDTO == null)
             {
                 return false;
             }
@@ -122,16 +128,21 @@ namespace BLL.Services
             {
                 Title = movieDTO.Title,
                 Description = movieDTO.Description,
-                ReleaseDate = movieDTO.Year,
+                ReleaseDate = movieDTO.ReleaseDate,
                 Director = movieDTO.Director,
-                RuntimeHours = movieDTO.Runtime,
-                Image = $"{string.Join("",movieDTO.Title.Split(" "))}.jpg"
+                RuntimeHours = movieDTO.RuntimeHours,
+                Image = $"{string.Join("",movieDTO.Title.Split(" "))}.jpg",
+                TrailerUrl = movieDTO.TrailerUrl,
             };
 
             // this should be checked
-            //var genres = await _unitOfWork.MovieGenreRepository.GetAsync(mg => movieDTO.Genres.Contains(mg.Name));
+            var genres = await _unitOfWork.MovieGenreRepository.GetAsync(mg => movieDTO.Genres.ToList().Contains(new MovieGenreDTO()
+            {
+                Id = mg.Id,
+                Name = mg.Name,
+            }));
 
-            //movie.Genres = (ICollection<MovieGenre>) genres;
+            movie.Genres = (ICollection<MovieGenre>) genres;
 
             try
             {
@@ -161,7 +172,7 @@ namespace BLL.Services
             catch (Exception ex)
             {
                 return false;
-            }*/
+            }
             
             return true;
         }

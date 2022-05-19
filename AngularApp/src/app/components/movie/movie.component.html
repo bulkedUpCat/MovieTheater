@@ -1,4 +1,7 @@
 <div class="item">
+    <div *ngIf="isAdmin">
+        <span (click)="onDeleteMovie()">&times;</span>
+    </div>
     <a routerLink="/movie-detail/{{movie?.id}}" routerLinkActive="active">
         <img [src]="imageUrl" alt="The poster of {{movie?.title}}">
         <h4>{{movie.title}} ({{movie.releaseDate}})</h4>

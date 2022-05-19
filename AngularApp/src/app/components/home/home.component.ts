@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { MovieService } from 'src/app/services/movie.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
 import { UserService } from 'src/app/services/user.service';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogComponent } from '../dialogs/dialog/dialog.component';
 
 @Component({
   selector: 'app-home',

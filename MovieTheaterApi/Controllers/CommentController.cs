@@ -1,4 +1,5 @@
 ﻿using BLL.Services;
+using BLL.Validators;
 using Core.DTOs;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MovieTheaterApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/comments")]
     [ApiController]
     public class CommentController : ControllerBase
     {
@@ -24,7 +25,7 @@ namespace MovieTheaterApi.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("movies/{id}")]
         public async Task<IEnumerable<Comment>> GetComments(int id)
         {
             return await _commentService.GetCommentsByMovieId(id);
@@ -46,6 +47,21 @@ namespace MovieTheaterApi.Controllers
             }
 
             return result;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _commentService.DeleteCommentAsync(id);
+            }
+            catch (MovieException e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok();
         }
     }
 }

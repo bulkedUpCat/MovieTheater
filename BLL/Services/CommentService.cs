@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Validators;
 using Core.DTOs;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
@@ -56,14 +57,6 @@ namespace BLL.Services
             var comment = _mapper.Map<Comment>(commentDTO);
             comment.UserName = user.UserName;
 
-            /*var comment = new Comment()
-            {
-                UserName = user.UserName,
-                UserId = commentDTO.UserId,
-                MovieId = commentDTO.MovieId,
-                Text = commentDTO.Text
-            };*/
-
             try
             {
                 await _unitOfWork.CommentRepository.InsertAsync(comment);
@@ -75,6 +68,26 @@ namespace BLL.Services
             }
 
             return comment;
+        }
+
+        public async Task DeleteCommentAsync(int id)
+        {
+            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(id);
+
+            if (comment == null)
+            {
+                throw new MovieException("Comment not found");
+            }
+
+            try
+            {
+                _unitOfWork.CommentRepository.Delete(comment);
+                await _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new MovieException(e.Message);
+            }
         }
     }
 }
