@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MovieTheaterApi.Controllers
@@ -7,9 +8,9 @@ namespace MovieTheaterApi.Controllers
     [Route("api/genres")]
     public class MovieGenreController : ControllerBase
     {
-        private readonly MovieGenreService _genreService;
+        private readonly IMovieGenreService _genreService;
 
-        public MovieGenreController(MovieGenreService genreService)
+        public MovieGenreController(IMovieGenreService genreService)
         {
             _genreService = genreService;
         }

@@ -1,4 +1,5 @@
-﻿using BLL.Email;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Email;
 using BLL.Services;
 using BLL.Validators;
 using Core.DTOs;
@@ -19,13 +20,13 @@ namespace MovieTheaterApi.Controllers
     [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         private readonly JwtHandler _jwtHandler;
         private readonly EmailSender _emailSender;
         private readonly IConfigurationRoot _configuration;
 
-        public AuthController(UserService userService,
+        public AuthController(IUserService userService,
             UserManager<User> userManager,
             JwtHandler jwtHandler,
             EmailSender emailSender,

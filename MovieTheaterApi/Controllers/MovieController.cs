@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Services;
 using BLL.Validators;
 using Core.DTOs;
 using Core.Models;
@@ -14,17 +15,11 @@ namespace MovieTheaterApi.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
-        private readonly MovieService _movieService;
-        private readonly UserService _userService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMovieService _movieService;
 
-        public MovieController(MovieService movieService,
-            UserService userService,
-            IUnitOfWork unitOfWork)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
-            _userService = userService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]

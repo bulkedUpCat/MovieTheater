@@ -8,7 +8,7 @@ namespace MovieTheaterApi.Controllers
 {
     [Route("api/roles")]
     [ApiController]
-   // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class RolesController : ControllerBase
     {
         private readonly UserManager<User> _userManager;

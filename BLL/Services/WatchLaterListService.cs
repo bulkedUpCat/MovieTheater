@@ -1,4 +1,5 @@
-﻿using Core.DTOs;
+﻿using BLL.Abstractions.Interfaces;
+using Core.DTOs;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
 using DataAccess;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class WatchLaterListService
+    public class WatchLaterListService : IWatchLaterListService
     {
         private readonly IUnitOfWork _unitOfWork;
 

@@ -1,16 +1,17 @@
 ﻿using Core.DTOs;
+using Core.Helpers;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Abstractions.Interfaces
 {
     public interface IMovieService
     {
-        string GetAllMovies();
-        bool AddMovie(MovieDTO movieDTO);
+        Task<IEnumerable<Movie>> GetAllMoviesAsync();
+        Task<PagedList<MovieDTO>> GetPagedMoviesAsync(MovieParameters movieParameters);
+        Task<Movie> GetMovieById(int id);
+        Task<bool> AddMovieAsync(AddMovieDTO movieDTO);
+        Task<bool> DeleteMovieAsync(int id);
+        Task<bool> UpdateMovieAsync(Movie updatedMovie);
+        Task<bool> CreateReport(MovieParameters movieParameters);
     }
 }

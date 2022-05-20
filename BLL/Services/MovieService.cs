@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.Interfaces;
 using BLL.Email;
 using BLL.Validators;
 using Core.DTOs;
@@ -16,7 +17,7 @@ using System.Net.Mail;
 
 namespace BLL.Services
 {
-    public class MovieService //: IMovieService
+    public class MovieService : IMovieService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;

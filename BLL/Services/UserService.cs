@@ -1,4 +1,5 @@
-﻿using BLL.Email;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Email;
 using Core.DTOs;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace BLL.Services
 {
-    public class UserService //: IUserService
+    public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
@@ -192,19 +193,6 @@ namespace BLL.Services
             var result =  await _userManager.UpdateAsync(user);
 
             return result.Succeeded;
-        }
-
-        public async Task UpdateEntityAsync(User user)
-        {
-            try
-            {
-                _unitOfWork.UserRepository.Update(user);
-                await _unitOfWork.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-
-            }
         }
     }
 }

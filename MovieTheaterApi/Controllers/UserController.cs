@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Services;
 using Core.DTOs;
 using Core.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -19,10 +20,10 @@ namespace MovieTheaterApi.Controllers
     [AllowAnonymous]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
 
-        public UserController(UserService userService,
+        public UserController(IUserService userService,
             UserManager<User> userManager)
         {
             _userService = userService;

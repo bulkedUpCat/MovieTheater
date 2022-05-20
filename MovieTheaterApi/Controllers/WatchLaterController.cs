@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Services;
 using Core.DTOs;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,9 +11,9 @@ namespace MovieTheaterApi.Controllers
     [ApiController]
     public class WatchLaterController : ControllerBase
     {
-        private readonly WatchLaterListService _userListService;
+        private readonly IWatchLaterListService _userListService;
 
-        public WatchLaterController(WatchLaterListService userListsService)
+        public WatchLaterController(IWatchLaterListService userListsService)
         {
             _userListService = userListsService;   
         }

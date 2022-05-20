@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Services;
 using Core.DTOs;
 using Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,9 +11,9 @@ namespace MovieTheaterApi.Controllers
     [ApiController]
     public class FavoriteListController : ControllerBase
     {
-        private readonly FavoriteListService _favoriteListService;
+        private readonly IFavoriteListService _favoriteListService;
 
-        public FavoriteListController(FavoriteListService favoriteListService)
+        public FavoriteListController(IFavoriteListService favoriteListService)
         {
             _favoriteListService = favoriteListService;
         }

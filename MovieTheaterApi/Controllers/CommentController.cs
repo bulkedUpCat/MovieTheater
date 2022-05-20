@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.Interfaces;
+using BLL.Services;
 using BLL.Validators;
 using Core.DTOs;
 using Core.Models;
@@ -11,9 +12,9 @@ namespace MovieTheaterApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly CommentService _commentService;
+        private readonly ICommentService _commentService;
 
-        public CommentController(CommentService commentService)
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
         }

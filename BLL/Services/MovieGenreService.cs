@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using BLL.Abstractions.Interfaces;
+using Core.Models;
 using DAL.Abstractions.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class MovieGenreService
+    public class MovieGenreService : IMovieGenreService
     {
         private readonly IUnitOfWork _unitOfWork;
 

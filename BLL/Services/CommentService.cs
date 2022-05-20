@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.Interfaces;
 using BLL.Validators;
 using Core.DTOs;
 using Core.Models;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class CommentService
+    public class CommentService : ICommentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

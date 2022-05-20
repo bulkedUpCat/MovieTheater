@@ -1,4 +1,5 @@
 using AutoMapper;
+using BLL.Abstractions.Interfaces;
 using BLL.Email;
 using BLL.Profiles;
 using BLL.Services;
@@ -62,12 +63,12 @@ builder.Services.AddTransient<IGenericRepository<User>, GenericRepository<User>>
 builder.Services.AddTransient<ICommentRepository, CommentRepository>();
 builder.Services.AddTransient<IMovieGenreRepository, MovieGenreRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<MovieService>();
-builder.Services.AddTransient<UserService>();
-builder.Services.AddTransient<CommentService>();
-builder.Services.AddTransient<WatchLaterListService>();
-builder.Services.AddTransient<FavoriteListService>();
-builder.Services.AddTransient<MovieGenreService>();
+builder.Services.AddTransient<IMovieService, MovieService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
+builder.Services.AddTransient<IWatchLaterListService, WatchLaterListService>();
+builder.Services.AddTransient<IFavoriteListService, FavoriteListService>();
+builder.Services.AddTransient<IMovieGenreService, MovieGenreService>();
 builder.Services.AddTransient<EmailSender>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
