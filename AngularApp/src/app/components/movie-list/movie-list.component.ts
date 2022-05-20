@@ -17,7 +17,7 @@ import { CreateReportComponent } from '../dialogs/create-report/create-report.co
 })
 export class MovieListComponent implements OnInit {
   @Input() watchLater: boolean = false;
-  @Input() favoriteList: boolean = this.sharedParamsService.favoriteList;
+  @Input() favoriteList: boolean = false;
   userInfo;
   filteredMovies: Array<Movie> = [];
   movieParameters: MovieParameters = new MovieParameters();
@@ -40,12 +40,22 @@ export class MovieListComponent implements OnInit {
       },
       err => console.log(err),
       () => console.log('all movies displayed'));
+
+      this.movieService.deletedMovieId.subscribe( id => {
+        if (id){
+          this.movieService.getMovies(this.movieParameters).subscribe( m => {
+            this.filteredMovies = m;
+          })
+        }
+      })
   }
 
   getUserInfo(){
     this.authService.getUserInfo().subscribe(u => {
-      this.userInfo = u;
-      this.sharedParamsService.userEmail = u.email;
+      if (u){
+        this.userInfo = u;
+        this.sharedParamsService.userEmail = u.email;
+      }
     })
   }
 
@@ -58,6 +68,7 @@ export class MovieListComponent implements OnInit {
       pageNumber: this.sharedParamsService.pageNumber,
       genres: this.sharedParamsService.genres,
       years: this.sharedParamsService.years,
+      runtime: this.sharedParamsService.runtime,
       userEmail: this.sharedParamsService.userEmail,
       watchLater: this.sharedParamsService.watchLater,
       favoriteList: this.sharedParamsService.favoriteList,
@@ -68,6 +79,7 @@ export class MovieListComponent implements OnInit {
   filterMovies(filterModel: FilterModel){
     this.movieParameters.genres = this.sharedParamsService.genres;
     this.movieParameters.years = this.sharedParamsService.years;
+    this.movieParameters.runtime = this.sharedParamsService.runtime;
 
     this.movieService.getMovies(this.movieParameters).subscribe(m => {
       this.filteredMovies = m;

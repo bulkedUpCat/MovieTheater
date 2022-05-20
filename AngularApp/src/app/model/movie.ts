@@ -13,13 +13,15 @@ export interface Movie {
 export interface MovieDTO{
   title: number;
   genres: Array<string>;
-  year: number;
+  releaseDate: number;
   description: string;
   director: string;
-  runtime: number;
+  runtimeHours: number;
+  image: string;
+  trailerUrl: string;
 }
 
-export interface MovieGenre{
+export class MovieGenre{
   id: number;
   name: string;
 }

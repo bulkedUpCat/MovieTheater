@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Movie } from 'src/app/model/movie';
 import { AuthService } from 'src/app/services/auth.service';
 import { MovieService } from 'src/app/services/movie.service';
+import { SharedParamsService } from 'src/app/services/shared-params.service';
 import { DeleteMovieComponent } from '../dialogs/delete-movie/delete-movie.component';
 
 @Component({
@@ -17,6 +18,7 @@ export class MovieComponent implements OnInit {
 
   constructor(private movieService: MovieService,
     private authService: AuthService,
+    private sharedParamsService: SharedParamsService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {

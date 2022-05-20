@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MovieGenre } from 'src/app/model/movie';
 import { MovieService } from 'src/app/services/movie.service';
 import { NotifierService } from 'src/app/services/notifier.service';
 
@@ -24,30 +25,16 @@ export class AddMovieComponent implements OnInit {
       title: [null,[Validators.required]],
       genres: [null,[Validators.required]],
       description: [null,[Validators.required]],
-      year: [null,[Validators.required]],
+      releaseDate: [null,[Validators.required]],
       director: [null,[Validators.required]],
-      runtime: [null,[Validators.required]]
-    })
-  }
-
-  get title(){
-    return this.movieForm.get('title');
+      runtimeHours: [null,[Validators.required]],
+      image: [null, [Validators.required]],
+      trailerUrl: [null, [Validators.required]]
+    });
   }
 
   get genres(){
     return this.movieForm.get('genres');
-  }
-
-  get description(){
-    return this.movieForm.get('description');
-  }
-
-  get year(){
-    return this.movieForm.get('year');
-  }
-
-  get director(){
-    return this.movieForm.get('director');
   }
 
   onSubmit(){
@@ -66,6 +53,7 @@ export class AddMovieComponent implements OnInit {
       this.notifier.showNotification('Movie added successfully', 'OK', 'success');
     },
     err => {
+      console.log(err);
       this.notifier.showNotification('An error occured', 'OK', 'error');
     })
   }

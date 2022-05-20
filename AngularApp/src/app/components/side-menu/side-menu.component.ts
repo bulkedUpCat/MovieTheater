@@ -20,7 +20,7 @@ export class SideMenuComponent implements OnInit {
   years: Array<number> = [2022,2021,2020,2019,2018];
   chosenYears: Array<number> = [];
   showYears: boolean;
-  runtime: Array<string> = ['10m', '30m', '1h', '1.5h', '2h'];
+  runtime: Array<string> = ['10m', '30m', '1h', '1.5h', '2h','3h'];
   chosenRuntime: Array<string> = [];
   showRuntime: boolean;
 
@@ -140,8 +140,24 @@ export class SideMenuComponent implements OnInit {
       this.chosenRuntime.push(runtime);
     }
 
-    this.filterModel.runtime = this.chosenRuntime;
-    this.sharedParamsService.runtime = this.chosenRuntime;
+    let modifiedRuntime = this.chosenRuntime
+      .map(r => r.split('m')[0])
+      .map(r => r.split('h')[0])
+      .map(r => {
+        let num = parseFloat(r);
+
+        if (num == 1.5){
+          num = 1.3;
+        }
+
+        if (num > 3){
+          num = num / 60;
+        }
+
+        return num;
+      });
+
+    this.sharedParamsService.runtime = modifiedRuntime;
     this.filters.emit(this.filterModel);
   }
 

@@ -61,12 +61,12 @@ namespace BLL.Services
             {
                 count = 0;
 
-                foreach (var parameter in movieParameters.Genres) 
+                foreach (var parameter in movieParameters.Genres)
                 {
                     foreach (var genre in movie.Genres)
                     {
-                        if (genre.Name == parameter) count++ ;
-                        
+                        if (genre.Name == parameter) count++;
+
                     }
                 }
 
@@ -78,7 +78,8 @@ namespace BLL.Services
 
             newMovies = newMovies
                 .Where(m => movieParameters.Years.Contains(m.ReleaseDate.ToString()) || movieParameters.Years.Count == 0)
-                .OrderByDescending(m => m.ReleaseDate)
+                .Where(m => movieParameters.Runtime.Any(r => m.RuntimeHours < r) || movieParameters.Runtime.Count == 0)
+                .OrderByDescending(m => m.WhenAdded)
                 .ToList();
 
             if (movieParameters.WatchLater && !string.IsNullOrEmpty(movieParameters.UserEmail))
@@ -117,7 +118,7 @@ namespace BLL.Services
             return movie;
         }
 
-        public async Task<bool> AddMovieAsync(MovieDTO movieDTO)
+        public async Task<bool> AddMovieAsync(AddMovieDTO movieDTO)
         {
             if (movieDTO == null)
             {
@@ -135,12 +136,7 @@ namespace BLL.Services
                 TrailerUrl = movieDTO.TrailerUrl,
             };
 
-            // this should be checked
-            var genres = await _unitOfWork.MovieGenreRepository.GetAsync(mg => movieDTO.Genres.ToList().Contains(new MovieGenreDTO()
-            {
-                Id = mg.Id,
-                Name = mg.Name,
-            }));
+            var genres = await _unitOfWork.MovieGenreRepository.GetAsync(mg => movieDTO.Genres.Contains(mg.Name));
 
             movie.Genres = (ICollection<MovieGenre>) genres;
 
@@ -157,8 +153,10 @@ namespace BLL.Services
             return true;
         }
 
-        public async Task<bool> DeleteMovie(Movie movie)
+        public async Task<bool> DeleteMovieAsync(int id)
         {
+            var movie = await _unitOfWork.MovieRepository.GetByIdAsync(id);
+
             if (movie == null)
             {
                 return false;
@@ -171,13 +169,13 @@ namespace BLL.Services
             }
             catch (Exception ex)
             {
-                return false;
+                throw new MovieException(ex.Message);
             }
             
             return true;
         }
 
-        public async Task<bool> UpdateAsync (Movie updatedMovie)
+        public async Task<bool> UpdateMovieAsync (Movie updatedMovie)
         {
             if (updatedMovie == null)
             {

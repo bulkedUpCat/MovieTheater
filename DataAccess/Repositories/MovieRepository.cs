@@ -16,26 +16,10 @@ namespace DataAccess.Repositories
     public class MovieRepository : IMovieRepository
     {
         private readonly AppDbContext _context;
-        private readonly AppReadDbConnection _readDbConnection;
-        private readonly AppWriteDbConnection _writeDbConnection;
 
-        public MovieRepository(AppDbContext context,
-            AppReadDbConnection readDbConnection)
+        public MovieRepository(AppDbContext context)
         {
             _context = context;
-            _readDbConnection = readDbConnection;
-            //_writeDbConnection = writeDbConnection;
-        }
-
-        public async Task<IEnumerable<Movie>> GetTest()
-        {
-            var query = $"SELECT * FROM [Movies] AS m" +
-                $" INNER JOIN [MovieGenres] AS mg ON m.Id = mg.MoviesId" +
-                $" INNER JOIN [MovieGenre] AS g ON g.Id = mg.GenresId";
-
-            var movies = await _readDbConnection.QueryAsync<Movie>(query);
-
-            return movies;
         }
 
         public async Task<IEnumerable<Movie>> GetAsync(Expression<Func<Movie, bool>> filter = null, Func<IQueryable<Movie>, IOrderedQueryable<Movie>> orderBy = null, string includeProperties = "")
@@ -70,17 +54,23 @@ namespace DataAccess.Repositories
 
         public void Update(Movie entityToUpdate)
         {
-            throw new NotImplementedException();
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public Task Delete(object id)
+        public async Task Delete(object id)
         {
-            throw new NotImplementedException();
+            var movie = await _context.Movies.FindAsync(id);
+            Delete(movie);
         }
 
         public void Delete(Movie entityToDelete)
         {
-            throw new NotImplementedException();
+            if (_context.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                _context.Movies.Attach(entityToDelete);
+            }
+
+            _context.Movies.Remove(entityToDelete);
         }
     }
 }

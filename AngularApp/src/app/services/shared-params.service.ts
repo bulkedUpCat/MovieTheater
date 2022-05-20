@@ -11,7 +11,7 @@ export class SharedParamsService {
   pageSize: number = 12;
   genres: Array<string> = new Array<string>();
   years: Array<number> = new Array<number>();
-  runtime: Array<string> = new Array<string>();
+  runtime: Array<number> = new Array<number>();
   searchString: string = '';
   showSortingOptions: boolean;
   showGenres: boolean;

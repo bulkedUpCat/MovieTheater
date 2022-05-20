@@ -36,7 +36,7 @@ namespace BLL.Services
 
         public async Task<IEnumerable<Comment>> GetCommentsByMovieId(int movieId)
         {
-            var comments = await _unitOfWork.CommentRepository.GetByMovieIdAsync(movieId);
+            IEnumerable<Comment> comments = await _unitOfWork.CommentRepository.GetByMovieIdAsync(movieId);
             return comments;
         }
 

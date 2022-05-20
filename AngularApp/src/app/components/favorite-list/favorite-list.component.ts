@@ -12,8 +12,4 @@ export class FavoriteListComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  goHome(){
-    this.location.back();
-  }
 }

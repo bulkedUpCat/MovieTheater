@@ -26,13 +26,6 @@ namespace MovieTheaterApi.Controllers
             _userService = userService;
             _unitOfWork = unitOfWork;
         }
-/*
-        [HttpGet("test")]
-        public async Task<ActionResult<IEnumerable<Movie>>> Get()
-        {
-            var movies = await _unitOfWork.MovieRepository.GetTest();
-            return Ok(movies);
-        }*/
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetAllMovies([FromQuery] MovieParameters movieParameters)
@@ -65,7 +58,7 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(MovieDTO movieDTO)
+        public async Task<IActionResult> Post(AddMovieDTO movieDTO)
         {
             var result = await _movieService.AddMovieAsync(movieDTO);
 
@@ -90,15 +83,19 @@ namespace MovieTheaterApi.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                await _movieService.DeleteMovieAsync(id);
+            }
+            catch (MovieException e)
+            {
+                return BadRequest(e.Message);
+            }
 
+            return Ok();
         }
     }
 }

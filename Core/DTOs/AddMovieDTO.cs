@@ -1,5 +1,4 @@
-﻿using Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Core.DTOs
 {
-    public class MovieDTO
+    public class AddMovieDTO
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int ReleaseDate { get; set; }
@@ -17,9 +15,6 @@ namespace Core.DTOs
         public double RuntimeHours { get; set; }
         public string Image { get; set; }
         public string TrailerUrl { get; set; }
-        public DateTime WhenAdded { get; set; }
-        public IEnumerable<MovieGenreDTO>? Genres { get; set; }
-        public ICollection<UserDTO>? WatchLaterUsers { get; set; }
-        public ICollection<UserDTO>? FavoriteListUsers { get; set; }
+        public IEnumerable<string> Genres { get; set; }
     }
 }

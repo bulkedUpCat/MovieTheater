@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Movie } from 'src/app/model/movie';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommentService } from 'src/app/services/comment.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-comment',
@@ -18,11 +19,13 @@ export class CommentComponent implements OnInit {
   commentForm: FormGroup;
   comments: any[];
   userId: number;
+  isAdmin: boolean;
 
   constructor(private fb: FormBuilder,
     private commentService: CommentService,
     private authService: AuthService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private notifier: NotifierService) { }
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -35,6 +38,12 @@ export class CommentComponent implements OnInit {
 
     this.authService.isLoggedIn.subscribe( u => {
       this.isLoggedIn = u;
+    });
+
+    this.authService.claims.subscribe(c => {
+      if (c){
+        this.isAdmin = c.includes('Admin');
+      }
     });
 
     this.createForm();
@@ -61,5 +70,15 @@ export class CommentComponent implements OnInit {
     {
       this.comments.unshift(c);
     },err => console.log(err));
+  }
+
+  deleteComment(id: number){
+    this.commentService.deleteComment(id).subscribe( c => {
+      this.commentService.getCommentsByMovieId(this.movie.id).subscribe( c => {
+        this.comments = c;
+      })
+    }, err => {
+      this.notifier.showNotification('Something went wrong','Ok','error');
+    })
   }
 }

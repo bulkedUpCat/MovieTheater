@@ -17,16 +17,10 @@ namespace DataAccess.Repositories
     public class CommentRepository : ICommentRepository
     {
         private readonly AppDbContext _context;
-        private readonly AppReadDbConnection _readDbConnection;
-        private readonly AppWriteDbConnection _writeDbConnection;
 
-        public CommentRepository(AppDbContext context,
-            AppReadDbConnection readDbConnection,
-            AppWriteDbConnection writeDbConnection)
+        public CommentRepository(AppDbContext context)
         {
             _context = context;
-            _readDbConnection = readDbConnection;
-            _writeDbConnection = writeDbConnection;
         }
 
         public async Task<IEnumerable<Comment>> GetAsync(
@@ -65,13 +59,7 @@ namespace DataAccess.Repositories
 
         public async Task<IEnumerable<Comment>> GetByMovieIdAsync(int id)
         {
-            //return _context.Comments.Where(c => c.MovieId == id);
-            var parameters = new { Id = id };
-            var query = $"SELECT * FROM [Comments] WHERE [MovieId] = @Id";
-
-            var comments = await _readDbConnection.QueryAsync<Comment>(query, parameters);
-
-            return comments;
+            return _context.Comments.Where(c => c.MovieId == id);
         }
 
         public async Task InsertAsync(Comment entity)

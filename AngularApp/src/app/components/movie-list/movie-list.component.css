@@ -42,6 +42,13 @@
 .print-button {
     float: right;
     margin-right: 5%;
+    background-color: #FFF;
+    padding: 1%;
+}
+
+.home-button {
+    background-color: #FFF;
+    margin-left: 2%;
     padding: 1%;
 }
 

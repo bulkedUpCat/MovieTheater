@@ -53,7 +53,9 @@ export class MovieDetailComponent implements OnInit {
       this.isLoggedIn = u;
     });
 
-    this.loggedUserId = this.userInfo.jti;
+    if (this.userInfo){
+      this.loggedUserId = this.userInfo.jti;
+    }
 
     this.createForm();
 

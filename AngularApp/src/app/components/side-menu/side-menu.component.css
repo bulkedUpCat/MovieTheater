@@ -4,12 +4,14 @@
     margin-top: 7%;
     position: fixed;
     border-radius: 10px;
+    z-index: 1000;
 }
 
 .sort-btn {
     margin-left: 5%;
     padding: 1%;
     margin-bottom: 2%;
+    background-color: #FFF;
 }
 
 .close-btn {

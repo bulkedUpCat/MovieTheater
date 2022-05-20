@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { Movie, MovieDTO } from '../model/movie';
 import { environment } from 'src/environments/environment';
 import { MovieUser } from '../model/movieUser';
@@ -11,6 +11,7 @@ import { MovieParameters } from '../model/movieParameters';
 })
 export class MovieService {
   private movieUser: MovieUser = new MovieUser();
+  public deletedMovieId = new BehaviorSubject<number>(null);
 
   constructor(private http : HttpClient) { }
 
@@ -22,6 +23,7 @@ export class MovieService {
         pageSize: movieParameters.pageSize,
         genres: movieParameters.genres,
         years: movieParameters.years,
+        runtime: movieParameters.runtime,
         userEmail: movieParameters.userEmail,
         watchLater: movieParameters.watchLater,
         favoriteList: movieParameters.favoriteList,

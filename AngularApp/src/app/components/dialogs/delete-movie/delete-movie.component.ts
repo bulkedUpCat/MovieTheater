@@ -23,6 +23,7 @@ export class DeleteMovieComponent implements OnInit {
     this.loaded = false;
     this.movieService.deleteMovie(this.data.movieId).subscribe(
     m => {
+      this.movieService.deletedMovieId.next(this.data.movieId);
       this.notifier
         .showNotification(`You've just deleted the movie with id: ${this.data.movieId}`,'Ok','success');
     },
