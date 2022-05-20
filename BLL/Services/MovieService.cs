@@ -42,7 +42,7 @@ namespace BLL.Services
         }
 
         public async Task<PagedList<MovieDTO>> GetPagedMoviesAsync(MovieParameters movieParameters)
-       {
+        {
             var movies = await _unitOfWork.MovieRepository.GetPagedMovies();
 
             var user = await _userManager.FindByEmailAsync(movieParameters.UserEmail);
@@ -55,46 +55,35 @@ namespace BLL.Services
             var moviesDTO = _mapper.Map<IEnumerable<MovieDTO>>(movies);
             var userDTO = _mapper.Map<UserDTO>(user);
 
-            List<MovieDTO> newMovies = new List<MovieDTO>();
-            int count;
+            List<MovieDTO> newMovies = moviesDTO.ToList();
 
-            foreach (var movie in moviesDTO)
+            newMovies = SortByGenres(newMovies, movieParameters.Genres);
+
+            if (movieParameters.Years.Count > 0)
             {
-                count = 0;
-
-                foreach (var parameter in movieParameters.Genres)
-                {
-                    foreach (var genre in movie.Genres)
-                    {
-                        if (genre.Name == parameter) count++;
-
-                    }
-                }
-
-                if (count == movieParameters.Genres.Count)
-                {
-                    newMovies.Add(movie);
-                }
+                newMovies = SortByYear(newMovies, movieParameters.Years);
             }
 
-            newMovies = newMovies
-                .Where(m => movieParameters.Years.Contains(m.ReleaseDate.ToString()) || movieParameters.Years.Count == 0)
-                .Where(m => movieParameters.Runtime.Any(r => m.RuntimeHours < r) || movieParameters.Runtime.Count == 0)
-                .OrderByDescending(m => m.WhenAdded)
-                .ToList();
-
-            if (movieParameters.WatchLater && !string.IsNullOrEmpty(movieParameters.UserEmail))
+            if (movieParameters.Runtime.Count > 0)
             {
-                newMovies = newMovies.Where(m => m.WatchLaterUsers.Any(u => u.Id == userDTO.Id)).ToList();
+                newMovies = SortByRuntime(newMovies, movieParameters.Runtime);
             }
-            else if (movieParameters.FavoriteList && !string.IsNullOrEmpty(movieParameters.UserEmail))
+
+            if (user != null)
             {
-                newMovies = newMovies.Where(m => m.FavoriteListUsers.Any(u => u.Id == userDTO.Id)).ToList();
+                if (movieParameters.WatchLater)
+                {
+                    newMovies = GetWatchLater(newMovies, user.Id);
+                }
+                else if (movieParameters.FavoriteList)
+                {
+                    newMovies = GetFavorite(newMovies, user.Id);
+                }
             }
 
             if (!string.IsNullOrEmpty(movieParameters.SearchString))
             {
-                newMovies = newMovies.Where(m => m.Title.Contains(movieParameters.SearchString.ToUpper())).ToList();
+                newMovies = SortBySearchString(newMovies, movieParameters.SearchString);
             }
 
             if (movieParameters.PageSize == 0)
@@ -105,6 +94,72 @@ namespace BLL.Services
             var pagedList = PagedList<MovieDTO>.ToPagedList(newMovies, movieParameters.PageNumber, movieParameters.PageSize);
 
             return pagedList;
+        }
+
+        private List<MovieDTO> SortByGenres(IList<MovieDTO> movies, List<string> movieGenres)
+        {
+            List<MovieDTO> filteredMovies = new List<MovieDTO>();
+
+            foreach (var movie in movies)
+            {
+                int count = 0;
+
+                foreach (var parameter in movieGenres)
+                {
+                    foreach (var genre in movie.Genres)
+                    {
+                        if (genre.Name == parameter) count++;
+
+                    }
+                }
+
+                if (count == movieGenres.Count)
+                {
+                    filteredMovies.Add(movie);
+                }
+            }
+
+            filteredMovies = filteredMovies
+                .OrderBy(m => m.WhenAdded)
+                .ToList();
+
+            return filteredMovies;
+        }
+
+        private List<MovieDTO> SortByYear(List<MovieDTO> movies, List<string> years)
+        {
+            return movies
+                .Where(m => years.Contains(m.ReleaseDate.ToString())).ToList();
+        }
+
+        private List<MovieDTO> SortByRuntime(List<MovieDTO> movies, List<double> runtime)
+        {
+            return movies
+                .Where(m => runtime.Any(r => m.RuntimeHours < r))
+                .ToList();
+        }
+
+        private List<MovieDTO> GetWatchLater(List<MovieDTO> movies, string userId)
+        {
+            return movies
+                .Where(m => m.WatchLaterUsers
+                .Any(u => u.Id == userId))
+                .ToList();
+        }
+
+        private List<MovieDTO> GetFavorite(List<MovieDTO> movies, string userId)
+        {
+            return movies
+                .Where(m => m.FavoriteListUsers
+                .Any(u => u.Id == userId))
+                .ToList();
+        }
+
+        private List<MovieDTO> SortBySearchString(List<MovieDTO> movies, string searchString)
+        {
+            return movies
+                .Where(m => m.Title.Contains(searchString.ToUpper()))
+                .ToList();
         }
 
         public async Task<Movie> GetMovieById(int id)
