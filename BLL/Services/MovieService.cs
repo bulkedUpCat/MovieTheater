@@ -220,7 +220,7 @@ namespace BLL.Services
 
             try
             {
-                _unitOfWork.MovieRepository.Delete(movie);
+                await _unitOfWork.MovieRepository.DeleteByIdAsync(id);
                 await _unitOfWork.SaveChanges();
             }
             catch (Exception ex)

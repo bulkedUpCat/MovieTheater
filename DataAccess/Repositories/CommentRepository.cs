@@ -74,20 +74,10 @@ namespace DataAccess.Repositories
             _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public async Task Delete(object id)
+        public async Task DeleteByIdAsync(int id)
         {
             var comment = await _context.Comments.FindAsync(id);
-            Delete(comment);
-        }
-
-        public void Delete(Comment entityToDelete)
-        {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _context.Comments.Attach(entityToDelete);
-            }
-
-            _context.Comments.Remove(entityToDelete);
+            _context.Comments.Remove(comment);
         }
     }
 }

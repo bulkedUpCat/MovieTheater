@@ -60,7 +60,14 @@ namespace DataAccess.Repositories
             _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public async Task Delete(object id)
+        public async Task DeleteByIdAsync(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+
+            _context.Movies.Remove(movie);
+        }
+
+        /*public async Task Delete(object id)
         {
             var movie = await _context.Movies.FindAsync(id);
             Delete(movie);
@@ -74,6 +81,6 @@ namespace DataAccess.Repositories
             }
 
             _context.Movies.Remove(entityToDelete);
-        }
+        }*/
     }
 }

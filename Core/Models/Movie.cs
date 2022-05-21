@@ -21,7 +21,6 @@ namespace Core.Models
         [Column(TypeName = "varchar(30)")]
         public string Director { get; set; }
 
-        [Column(TypeName = "varchar(30)")]
         public double RuntimeHours { get; set; }
 
         [Column(TypeName = "varchar(100)")]

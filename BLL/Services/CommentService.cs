@@ -82,7 +82,7 @@ namespace BLL.Services
 
             try
             {
-                _unitOfWork.CommentRepository.Delete(comment);
+                await _unitOfWork.CommentRepository.DeleteByIdAsync(id);
                 await _unitOfWork.SaveChanges();
             }
             catch (Exception e)

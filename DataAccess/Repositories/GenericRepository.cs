@@ -61,18 +61,9 @@ namespace DataAccess.Repositories
             return entity;
         }
 
-        public async virtual Task Delete(object id)
+        public async virtual Task DeleteByIdAsync(int id)
         {
             T entityToDelete = await dbSet.FindAsync(id);
-            Delete(entityToDelete);
-        }
-
-        public virtual void Delete(T entityToDelete)
-        {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
             dbSet.Remove(entityToDelete);
         }
 

@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTheaterApi", "MovieTheaterApi\MovieTheaterApi.csproj", "{0B795FFC-8B90-466D-907F-50621F9B4DC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTheater.Tests", "MovieTheater.Tests\MovieTheater.Tests.csproj", "{060CC592-4585-4525-B5DC-193083480A77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{0B795FFC-8B90-466D-907F-50621F9B4DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B795FFC-8B90-466D-907F-50621F9B4DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B795FFC-8B90-466D-907F-50621F9B4DC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060CC592-4585-4525-B5DC-193083480A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060CC592-4585-4525-B5DC-193083480A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060CC592-4585-4525-B5DC-193083480A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060CC592-4585-4525-B5DC-193083480A77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,8 +19,7 @@ namespace DAL.Abstractions.Interfaces
 
         Task<T> InsertAsync(T entity);
 
-        Task Delete(object id);
-        void Delete(T entityToDelete);
+        Task DeleteByIdAsync(int id);
         void Update(T entityToUpdate);
     }
 }

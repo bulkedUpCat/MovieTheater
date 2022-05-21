@@ -64,20 +64,10 @@ namespace DataAccess.Repositories
             _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public async Task Delete(object id)
+        public async Task DeleteByIdAsync(int id)
         {
             var user = await _context.Users.FindAsync(id.ToString());
-            Delete(user);
-        }
-
-        public void Delete(User entityToDelete)
-        {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _context.Users.Attach(entityToDelete);
-            }
-
-            _context.Users.Remove(entityToDelete);
+            _context.Users.Remove(user);
         }
     }
 }
