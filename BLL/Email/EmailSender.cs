@@ -17,7 +17,7 @@ namespace BLL.Email
             mail.IsBodyHtml = true;
             mail.Body = emailTemplate.Body;
             mail.Subject = emailTemplate.Subject;
-            mail.From = new MailAddress("kostathebesttt@gmail.com");
+            mail.From = new MailAddress("myemail");
             mail.To.Add(emailTemplate.To);
             
             if (emailTemplate.Attachment != null)
@@ -33,7 +33,7 @@ namespace BLL.Email
             try
             {
                 MailMessage message = GetMailMessage(emailTemplate);
-                var credentials = new NetworkCredential("kostathebesttt@gmail.com", "18112003K");
+                var credentials = new NetworkCredential("myemail", "mypassword");
 
                 var client = new SmtpClient()
                 {

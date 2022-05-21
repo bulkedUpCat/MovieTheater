@@ -66,21 +66,5 @@ namespace DataAccess.Repositories
 
             _context.Movies.Remove(movie);
         }
-
-        /*public async Task Delete(object id)
-        {
-            var movie = await _context.Movies.FindAsync(id);
-            Delete(movie);
-        }
-
-        public void Delete(Movie entityToDelete)
-        {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _context.Movies.Attach(entityToDelete);
-            }
-
-            _context.Movies.Remove(entityToDelete);
-        }*/
     }
 }

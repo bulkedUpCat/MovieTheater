@@ -23,6 +23,7 @@ namespace MovieTheater.Tests
             }
 
             return options;
+            //return new DbContextOptionsBuilder<AppDbContext>().Options();
         }
 
         public static void SeedData(AppDbContext context)

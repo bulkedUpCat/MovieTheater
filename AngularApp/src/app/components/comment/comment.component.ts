@@ -33,7 +33,6 @@ export class CommentComponent implements OnInit {
     this.commentService.getCommentsByMovieId(id).subscribe(c => {
       this.comments = c;
       this.comments.reverse();
-      console.log(this.comments);
     },err => console.log(err));
 
     this.authService.isLoggedIn.subscribe( u => {
@@ -76,6 +75,7 @@ export class CommentComponent implements OnInit {
     this.commentService.deleteComment(id).subscribe( c => {
       this.commentService.getCommentsByMovieId(this.movie.id).subscribe( c => {
         this.comments = c;
+        this.comments.reverse();
       })
     }, err => {
       this.notifier.showNotification('Something went wrong','Ok','error');
