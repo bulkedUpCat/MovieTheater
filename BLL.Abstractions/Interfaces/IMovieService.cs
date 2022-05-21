@@ -9,7 +9,7 @@ namespace BLL.Abstractions.Interfaces
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
         Task<PagedList<MovieDTO>> GetPagedMoviesAsync(MovieParameters movieParameters);
         Task<Movie> GetMovieById(int id);
-        Task<bool> AddMovieAsync(AddMovieDTO movieDTO);
+        Task<Movie> AddMovieAsync(AddMovieDTO movieDTO);
         Task<bool> DeleteMovieAsync(int id);
         Task<bool> UpdateMovieAsync(Movie updatedMovie);
         Task<bool> CreateReport(MovieParameters movieParameters);

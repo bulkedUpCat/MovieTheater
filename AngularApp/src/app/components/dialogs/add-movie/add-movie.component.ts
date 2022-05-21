@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MovieGenre } from 'src/app/model/movie';
 import { MovieService } from 'src/app/services/movie.service';
 import { NotifierService } from 'src/app/services/notifier.service';
@@ -14,7 +15,8 @@ export class AddMovieComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private movieService: MovieService,
-    private notifier: NotifierService) { }
+    private notifier: NotifierService,
+    public dialogRef: MatDialogRef<AddMovieComponent>) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -28,7 +30,7 @@ export class AddMovieComponent implements OnInit {
       releaseDate: [null,[Validators.required]],
       director: [null,[Validators.required]],
       runtimeHours: [null,[Validators.required]],
-      image: [null, [Validators.required]],
+      image: [' '],
       trailerUrl: [null, [Validators.required]]
     });
   }
@@ -51,10 +53,12 @@ export class AddMovieComponent implements OnInit {
 
     this.movieService.addMovie(movie).subscribe(m => {
       this.notifier.showNotification('Movie added successfully', 'OK', 'success');
+      this.movieService.addedMovie.next(true);
+      this.dialogRef.close();
     },
     err => {
       console.log(err);
       this.notifier.showNotification('An error occured', 'OK', 'error');
-    })
+    });
   }
 }

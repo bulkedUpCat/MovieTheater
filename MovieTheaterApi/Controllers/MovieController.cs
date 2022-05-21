@@ -29,14 +29,14 @@ namespace MovieTheaterApi.Controllers
 
             if (movies == null)
             {
-                return NotFound();
+                return NotFound("No movie found");
             }
 
             return Ok(movies);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> Get(int id)
+        public async Task<ActionResult<Movie>> GetById(int id)
         {
             Movie movie;
 
@@ -55,14 +55,16 @@ namespace MovieTheaterApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(AddMovieDTO movieDTO)
         {
-            var result = await _movieService.AddMovieAsync(movieDTO);
-
-            if (!result)
+            try
             {
-                return BadRequest();
-            }
+                var movie = await _movieService.AddMovieAsync(movieDTO);
 
-            return Ok();
+                return CreatedAtAction(nameof(GetById), new { id = movie.Id }, movie);
+            }
+            catch (MovieException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("report")]
@@ -72,10 +74,10 @@ namespace MovieTheaterApi.Controllers
 
             if (!result)
             {
-                return BadRequest();
+                return BadRequest("Failed to create a movie report");
             }
 
-            return Ok();
+            return StatusCode(201);
         }
 
         [HttpDelete("{id}")]

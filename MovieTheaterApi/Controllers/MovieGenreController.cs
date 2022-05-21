@@ -23,7 +23,7 @@ namespace MovieTheaterApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var genre = await _genreService.GetGenreByIdAsync(id);
             return Ok(genre);

@@ -55,9 +55,10 @@ namespace DataAccess.Repositories
             return await dbSet.FindAsync(id);
         }
 
-        public async virtual Task InsertAsync(T entity)
+        public async virtual Task<T> InsertAsync(T entity)
         {
             await dbSet.AddAsync(entity);
+            return entity;
         }
 
         public async virtual Task Delete(object id)

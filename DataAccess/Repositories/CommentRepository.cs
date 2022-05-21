@@ -62,9 +62,10 @@ namespace DataAccess.Repositories
             return _context.Comments.Where(c => c.MovieId == id);
         }
 
-        public async Task InsertAsync(Comment entity)
+        public async Task<Comment> InsertAsync(Comment entity)
         {
             await _context.Comments.AddAsync(entity);
+            return entity;
         }
 
         public void Update(Comment entityToUpdate)

@@ -41,8 +41,19 @@ export class MovieListComponent implements OnInit {
       err => console.log(err),
       () => console.log('all movies displayed'));
 
+
+     // when movie is deleted
       this.movieService.deletedMovieId.subscribe( id => {
         if (id){
+          this.movieService.getMovies(this.movieParameters).subscribe( m => {
+            this.filteredMovies = m;
+          })
+        }
+      })
+
+      // when new movie is added
+      this.movieService.addedMovie.subscribe( m => {
+        if (m){
           this.movieService.getMovies(this.movieParameters).subscribe( m => {
             this.filteredMovies = m;
           })

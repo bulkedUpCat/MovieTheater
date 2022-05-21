@@ -53,9 +53,10 @@ namespace DataAccess.Repositories
             return await _context.Users.FindAsync(id.ToString());
         }
 
-        public async Task InsertAsync(User entity)
+        public async Task<User> InsertAsync(User entity)
         {
             await _context.Users.AddAsync(entity);
+            return entity;
         }
 
         public void Update(User entityToUpdate)

@@ -63,9 +63,10 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task InsertAsync(MovieGenre entity)
+        public async Task<MovieGenre> InsertAsync(MovieGenre entity)
         {
             await _context.MovieGenre.AddAsync(entity);
+            return entity;
         }
 
         public void Update(MovieGenre entityToUpdate)

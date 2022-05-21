@@ -120,7 +120,7 @@ namespace BLL.Services
             }
 
             filteredMovies = filteredMovies
-                .OrderBy(m => m.WhenAdded)
+                .OrderByDescending(m => m.WhenAdded)
                 .ToList();
 
             return filteredMovies;
@@ -174,11 +174,11 @@ namespace BLL.Services
             return movie;
         }
 
-        public async Task<bool> AddMovieAsync(AddMovieDTO movieDTO)
+        public async Task<Movie> AddMovieAsync(AddMovieDTO movieDTO)
         {
             if (movieDTO == null)
             {
-                return false;
+                throw new MovieException("Movie is null");
             }
 
             var movie = new Movie()
@@ -198,15 +198,15 @@ namespace BLL.Services
 
             try
             {
-                await _unitOfWork.MovieRepository.InsertAsync(movie);
+                var foundMovie = await _unitOfWork.MovieRepository.InsertAsync(movie);
                 await _unitOfWork.SaveChanges();
+
+                return foundMovie;
             }
             catch (Exception ex)
             {
-                return false;
+                throw new MovieException(ex.Message);
             } 
-
-            return true;
         }
 
         public async Task<bool> DeleteMovieAsync(int id)

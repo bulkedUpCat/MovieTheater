@@ -12,6 +12,7 @@ import { MovieParameters } from '../model/movieParameters';
 export class MovieService {
   private movieUser: MovieUser = new MovieUser();
   public deletedMovieId = new BehaviorSubject<number>(null);
+  public addedMovie = new BehaviorSubject<boolean>(false);
 
   constructor(private http : HttpClient) { }
 

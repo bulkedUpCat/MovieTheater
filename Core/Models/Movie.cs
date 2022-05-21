@@ -10,7 +10,7 @@ namespace Core.Models
 {
     public class Movie : BaseEntity
     {
-        [Column(TypeName = "varchar(30)")]
+        [Column(TypeName = "varchar(100)")]
         public string Title { get; set; }
 
         [Column(TypeName = "varchar(2000)")]
@@ -24,8 +24,8 @@ namespace Core.Models
         [Column(TypeName = "varchar(30)")]
         public double RuntimeHours { get; set; }
 
-        [Column(TypeName = "varchar(30)")]
-        public string Image { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? Image { get; set; }
 
         [Column(TypeName = "varchar(100)")]
         public string TrailerUrl { get; set; }

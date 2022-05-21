@@ -22,7 +22,9 @@ namespace DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Movie>> GetAsync(Expression<Func<Movie, bool>> filter = null, Func<IQueryable<Movie>, IOrderedQueryable<Movie>> orderBy = null, string includeProperties = "")
+        public async Task<IEnumerable<Movie>> GetAsync(Expression<Func<Movie, bool>> filter = null
+            , Func<IQueryable<Movie>, IOrderedQueryable<Movie>> orderBy = null
+            , string includeProperties = "")
         {
             var movies = await _context.Movies.ToListAsync();
             return movies;
@@ -47,9 +49,10 @@ namespace DataAccess.Repositories
             return movies;
         }
 
-        public async Task InsertAsync(Movie entity)
+        public async Task<Movie> InsertAsync(Movie entity)
         {
             await _context.Movies.AddAsync(entity);
+            return entity;
         }
 
         public void Update(Movie entityToUpdate)
